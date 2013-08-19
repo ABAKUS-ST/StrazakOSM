@@ -1,0 +1,276 @@
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    
+    android:id="@+id/viewSwitcher1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:inAnimation="@android:anim/slide_in_left"
+    tools:context=".PikietazActivity" >
+
+    
+
+
+    <LinearLayout 
+    android:id="@+id/view2"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageButton
+                    android:id="@+id/pillar_50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/slup_75" />
+
+                <ImageButton
+                    android:id="@+id/pillar_100"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/slup_110" />
+
+                <ImageButton
+                    android:id="@+id/pillar_x"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/slup_inny" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageButton
+                    android:id="@+id/underground_50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ziem_75" />
+
+                <ImageButton
+                    android:id="@+id/underground_100"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ziem_110" />
+
+                <ImageButton
+                    android:id="@+id/underground_x"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ziem_inna" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageButton
+                    android:id="@+id/wall_50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sciana_75" />
+
+                <ImageButton
+                    android:id="@+id/wall_100"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sciana_110" />
+
+                <ImageButton
+                    android:id="@+id/wall_x"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/sciana_inna" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageButton
+                    android:id="@+id/wpoint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pc" />
+
+                <Button
+                    android:id="@+id/pond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Suchy
+pion" />
+
+                <Button
+                    android:id="@+id/other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Inny" />
+
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Numer ref.:"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/hydrant_ref"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number" >
+
+            <requestFocus />
+        </EditText>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/hydrant_add"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:text="Dodaj" />
+
+        <Button
+            android:id="@+id/hydrant_add_wp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50"
+            android:text="Dodaj 
+z położeniem" />
+
+    </LinearLayout>
+
+ </LinearLayout>
+ 
+   <RelativeLayout
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="455dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
+
+        <TextView
+            android:id="@+id/ref_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_button"
+            android:layout_marginTop="37dp"
+            android:text="ref="
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/ref_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/add_button"
+            android:layout_alignTop="@+id/ref_label"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/ref_label"
+            android:ems="10"
+            android:text="0" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ref_label"
+            android:minHeight="100dp"
+            android:minWidth="120dip"
+            android:text="-"
+            android:textSize="@dimen/Big" />
+
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/pk_edit"
+            android:layout_below="@+id/pk_edit"
+            android:layout_marginTop="32dp"
+            android:layout_toRightOf="@+id/ref_label"
+            android:minHeight="100dp"
+            android:text="Dodaj" />
+
+        <EditText
+            android:id="@+id/pk_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/minus_button"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/minus_button"
+            android:ems="10"
+            android:inputType="number"
+            android:text="0" />
+
+        <Button
+            android:id="@+id/plus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/pk_edit"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/minus_button"
+            android:minHeight="100dp"
+            android:minWidth="120dip"
+            android:text="+"
+            android:textSize="@dimen/Big" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/ref_label"
+            android:layout_alignRight="@+id/ref_edit"
+            android:layout_below="@+id/ref_edit"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/pk_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/pk_edit"
+            android:layout_alignParentLeft="true"
+            android:text="pk="
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>
+    
+    
+</ViewSwitcher>

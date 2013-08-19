@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item
+        android:id="@+id/changeview"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/changeview"/>
+
+     <item
+        android:id="@+id/upload"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/upload"/>
+     
+          <item
+        android:id="@+id/info"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/info"/>
+    
+    <item
+        android:id="@+id/quit"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/quit"/>
+
+
+</menu>
