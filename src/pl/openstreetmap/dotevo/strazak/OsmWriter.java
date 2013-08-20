@@ -50,7 +50,7 @@ public class OsmWriter {
 			this.path = path;
 
 			osmFile.write("<?xml version='1.0' encoding='UTF-8'?>\n");
-			osmFile.write("<osm version='0.6' generator='Pikietaz'>\n");
+			osmFile.write("<osm version='0.6' generator='StrazakOSM'>\n");
 		} else {
 			// append to existing (and initialised) file
 			File oldOsmFile = new File(path);

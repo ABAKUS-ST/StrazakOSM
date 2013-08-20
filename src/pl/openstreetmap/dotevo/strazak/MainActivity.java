@@ -8,6 +8,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.GpsStatus.Listener;
@@ -41,35 +45,32 @@ public class MainActivity extends Activity implements OnClickListener,
 	private static final int UNDERGROUND = 2;
 	private static final int WALL = 3;
 	private static final int POND = 4;
+	private static final int SUCTION_POINT = 5;
 	private static final int OTHER = 100;
-	private static final int WPOINT = 100;
 	private static final int SWIPE_MIN_VELOCITY = 100;
 	private static final int SWIPE_MIN_DISTANCE = 100;
+	private static final long LOCATION_UPDATE_MIN_TIME_MS = 0;
+	private static final float LOCATION_UPDATE_MIN_DISTANCE = 0;
+	private static final String URL_SERVER = "http://mapa.abakus.net.pl/mil_up/up1.php";
 
-	private EditText ref_edit;
-	private EditText pk_edit;
-	private TextView status_label;
-	private Button add_button;
+	private EditText refEdit;
+	private EditText distanceEdit;
+	private TextView statusLabel;
+	private Button addButton;
+	private ViewSwitcher switcher;
+	private Button hydrantAdd;
+	private Button hydrantAddWp;
+	private EditText hydrantRef;
+	private GestureDetector gestureDetector = null;
+
 	private LocationManager locationManager = null;
-	private static final long locationUpdateMinTimeMs = 0;
-	private static final float locationUpdateMinDistance = 0;
 	private Location location;
 
-	ViewSwitcher switcher;
-	View pikView;
-	View hydrantView;
-
-	int hydrant_size = -1;
-	int hydrant_type = -1;
-	int hydrant_place = -1;
-
-	private Button hydrant_add;
-	private Button hydrant_add_wp;
-	private EditText hydrant_ref;
-	private GestureDetector gesturedetector = null;
-
-	private int lastclick = 0;
-	private String urlServer = "http://mapa.abakus.net.pl/mil_up/up1.php";
+	private int hydrantSize = -1;
+	private int hydrantType = -1;
+	private int hydrantPlace = -1;
+	private int lastClick = 0;
+	private Integer lastButtonId = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,44 +100,46 @@ public class MainActivity extends Activity implements OnClickListener,
 			showDialogFatalError(R.string.errorStorageUnavailable);
 		}
 
-		pk_edit = (EditText) findViewById(R.id.pk_edit);
-		ref_edit = (EditText) findViewById(R.id.ref_edit);
-		status_label = (TextView) findViewById(R.id.status);
-		add_button = (Button) findViewById(R.id.add_button);
-		hydrant_add = (Button) findViewById(R.id.hydrant_add);
-		hydrant_add_wp = (Button) findViewById(R.id.hydrant_add_wp);
-		hydrant_ref = (EditText) findViewById(R.id.hydrant_ref);
-		add_button.setOnClickListener(this);
+		distanceEdit = (EditText) findViewById(R.id.distance_edit);
+		refEdit = (EditText) findViewById(R.id.ref_edit);
+		statusLabel = (TextView) findViewById(R.id.status);
+		addButton = (Button) findViewById(R.id.add_button);
+		hydrantAdd = (Button) findViewById(R.id.hydrant_add);
+		hydrantAddWp = (Button) findViewById(R.id.hydrant_add_wp);
+		hydrantRef = (EditText) findViewById(R.id.hydrant_ref);
+
+		addButton.setOnClickListener(this);
 
 		findViewById(R.id.plus_button).setOnClickListener(this);
 		findViewById(R.id.minus_button).setOnClickListener(this);
 
-		status_label.setText("Hello");
+		statusLabel.setText("Hello");
 
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-				locationUpdateMinTimeMs, locationUpdateMinDistance, this);
+		locationManager
+				.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+						LOCATION_UPDATE_MIN_TIME_MS,
+						LOCATION_UPDATE_MIN_DISTANCE, this);
 		locationManager.addGpsStatusListener(this);
 
 		findViewById(R.id.hydrant_add).setOnClickListener(this);
 		findViewById(R.id.hydrant_add_wp).setOnClickListener(this);
 		findViewById(R.id.pillar_100).setOnClickListener(this);
-		findViewById(R.id.pillar_50).setOnClickListener(this);
+		findViewById(R.id.pillar_80).setOnClickListener(this);
 		findViewById(R.id.pillar_x).setOnClickListener(this);
 		findViewById(R.id.wall_100).setOnClickListener(this);
-		findViewById(R.id.wall_50).setOnClickListener(this);
+		findViewById(R.id.wall_80).setOnClickListener(this);
 		findViewById(R.id.wall_x).setOnClickListener(this);
 		findViewById(R.id.underground_100).setOnClickListener(this);
-		findViewById(R.id.underground_50).setOnClickListener(this);
+		findViewById(R.id.underground_80).setOnClickListener(this);
 		findViewById(R.id.underground_x).setOnClickListener(this);
 		findViewById(R.id.other).setOnClickListener(this);
 		findViewById(R.id.pond).setOnClickListener(this);
 		findViewById(R.id.wpoint).setOnClickListener(this);
 
 		switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher1);
-		pikView = findViewById(R.id.view1);
-		hydrantView = findViewById(R.id.view2);
 
-		gesturedetector = new GestureDetector(this, this);
+		gestureDetector = new GestureDetector(this, this);
+
 		setEnableButtons();
 	}
 
@@ -162,17 +165,22 @@ public class MainActivity extends Activity implements OnClickListener,
 	private Runnable unlockButton = new Runnable() {
 		@Override
 		public void run() {
-			add_button.setEnabled(true);
+			addButton.setEnabled(true);
 		}
 	};
 
 	@Override
 	public void onClick(View arg0) {
+		changeViewColor(lastButtonId, null);
+		lastButtonId = arg0.getId();
+
 		switch (arg0.getId()) {
 		case R.id.minus_button:
-			lastclick = -1;
-			pk_edit.setText(""
-					+ (Integer.parseInt(pk_edit.getText().toString()) - 1));
+			lastClick = -1;
+			distanceEdit
+					.setText(""
+							+ (Integer.parseInt(distanceEdit.getText()
+									.toString()) - 1));
 			break;
 		case R.id.add_button:
 			Log.i("Pikietaz", "new point");
@@ -183,9 +191,9 @@ public class MainActivity extends Activity implements OnClickListener,
 
 			HashMap<String, String> tags = new HashMap<String, String>();
 			tags.put("highway", "milestone");
-			tags.put("pk", pk_edit.getText().toString());
+			tags.put("distance", distanceEdit.getText().toString());
 			tags.put("source", "GPS");
-			tags.put("ref", ref_edit.getText().toString());
+			tags.put("ref", refEdit.getText().toString());
 			try {
 				if (((StApplication) this.getApplication()).osmWriter == null)
 					((StApplication) this.getApplication()).newOSMFile();
@@ -195,65 +203,82 @@ public class MainActivity extends Activity implements OnClickListener,
 				showDialogFatalError(R.string.errorFileOpen);
 			}
 
-			Toast.makeText(this, "pk=" + pk_edit.getText().toString(),
+			Toast.makeText(this,
+					"distance=" + distanceEdit.getText().toString(),
 					Toast.LENGTH_LONG).show();
-			pk_edit.setText(""
-					+ (Integer.parseInt(pk_edit.getText().toString()) + lastclick));
+			distanceEdit
+					.setText(""
+							+ (Integer.parseInt(distanceEdit.getText()
+									.toString()) + lastClick));
 
 			Handler myHandler = new Handler();
-			add_button.setEnabled(false);
+			addButton.setEnabled(false);
 			myHandler.postDelayed(unlockButton, 1000);
 			break;
 		case R.id.plus_button:
-			lastclick = 1;
-			pk_edit.setText(""
-					+ (Integer.parseInt(pk_edit.getText().toString()) + 1));
+			lastClick = 1;
+			distanceEdit
+					.setText(""
+							+ (Integer.parseInt(distanceEdit.getText()
+									.toString()) + 1));
 			break;
 		// HYDRANT
-		case R.id.pillar_50:
-			hydrant_size = 75;
-			hydrant_type = PILLAR;
+		case R.id.pillar_80:
+			hydrantSize = 80;
+			hydrantType = PILLAR;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.pillar_100:
-			hydrant_size = 110;
-			hydrant_type = PILLAR;
+			hydrantSize = 100;
+			hydrantType = PILLAR;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.pillar_x:
 			showDialogNumber();
-			hydrant_type = PILLAR;
+			hydrantType = PILLAR;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
-		case R.id.underground_50:
-			hydrant_size = 75;
-			hydrant_type = UNDERGROUND;
+		case R.id.underground_80:
+			hydrantSize = 80;
+			hydrantType = UNDERGROUND;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.underground_100:
-			hydrant_size = 110;
-			hydrant_type = UNDERGROUND;
+			hydrantSize = 100;
+			hydrantType = UNDERGROUND;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.underground_x:
 			showDialogNumber();
-			hydrant_type = UNDERGROUND;
+			hydrantType = UNDERGROUND;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
-		case R.id.wall_50:
-			hydrant_size = 75;
-			hydrant_type = WALL;
+		case R.id.wall_80:
+			hydrantSize = 80;
+			hydrantType = WALL;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.wall_100:
-			hydrant_size = 110;
-			hydrant_type = WALL;
+			hydrantSize = 100;
+			hydrantType = WALL;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.wall_x:
 			showDialogNumber();
-			hydrant_type = WALL;
+			hydrantType = WALL;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.pond:
-			hydrant_type = POND;
+			hydrantType = POND;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.other:
-			hydrant_type = OTHER;
+			hydrantType = OTHER;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.wpoint:
-			hydrant_type = WPOINT;
+			hydrantType = SUCTION_POINT;
+			changeViewColor(lastButtonId, Color.GREEN);
 			break;
 		case R.id.hydrant_add:
 			addHydrant();
@@ -266,7 +291,7 @@ public class MainActivity extends Activity implements OnClickListener,
 		setEnableButtons();
 	}
 
-	void addHydrant() {
+	private void addHydrant() {
 		if (location == null) {
 			Toast.makeText(this, "Poczekaj na fix :-)", Toast.LENGTH_LONG)
 					.show();
@@ -274,37 +299,41 @@ public class MainActivity extends Activity implements OnClickListener,
 		}
 
 		String type = "";
-		if (hydrant_type == PILLAR)
+		if (hydrantType == PILLAR)
 			type = "pillar";
-		else if (hydrant_type == UNDERGROUND)
+		else if (hydrantType == UNDERGROUND)
 			type = "underground";
-		else if (hydrant_type == WALL)
+		else if (hydrantType == WALL)
 			type = "wall";
-		else if (hydrant_type == POND)
+		else if (hydrantType == POND)
 			type = "pond";
+		else if (hydrantType == SUCTION_POINT)
+			type = "suction_point";
+		else if (hydrantType == OTHER)
+			type = "other";
 
 		HashMap<String, String> tags = new HashMap<String, String>();
 
-		if (hydrant_type != WPOINT)
-			tags.put("emergency", "fire_hydrant");
-		if (hydrant_type != OTHER)
-			tags.put("fire_hydrant:type", type);
-		if (hydrant_size != -1)
-			tags.put("fire_hydrant:diameter", String.valueOf(hydrant_size));
+		tags.put("emergency", "fire_hydrant");
 
-		if (hydrant_place == 0)
+		if (hydrantType != OTHER)
+			tags.put("fire_hydrant:type", type);
+		if (hydrantSize != -1)
+			tags.put("fire_hydrant:diameter", String.valueOf(hydrantSize));
+
+		if (hydrantPlace == 0)
 			tags.put("fire_hydrant:position", "lane");
-		if (hydrant_place == 1)
+		if (hydrantPlace == 1)
 			tags.put("fire_hydrant:position", "green");
-		if (hydrant_place == 2)
-			tags.put("fire_hydrant:position", "parking lot");
-		if (hydrant_place == 3)
+		if (hydrantPlace == 2)
+			tags.put("fire_hydrant:position", "parking_lot");
+		if (hydrantPlace == 3)
 			tags.put("fire_hydrant:position", "sidewalk");
 
-		if (hydrant_ref.getText().length() > 0) {
-			tags.put("ref", hydrant_ref.getText().toString());
-		} else {
-			tags.put("emergency", "suction_point");
+		tags.put("source", "GSM (APK:StrazakOSM)");
+
+		if (hydrantRef.getText().length() > 0) {
+			tags.put("ref", hydrantRef.getText().toString());
 		}
 
 		try {
@@ -319,27 +348,27 @@ public class MainActivity extends Activity implements OnClickListener,
 			return;
 		}
 
-		Toast.makeText(this, "Nowy hydrant typu:" + type, Toast.LENGTH_LONG)
+		Toast.makeText(this, "Nowy hydrant typu: " + type, Toast.LENGTH_LONG)
 				.show();
 
-		hydrant_type = -1;
-		hydrant_size = -1;
-		hydrant_place = -1;
-		hydrant_ref.setText("");
+		hydrantType = -1;
+		hydrantSize = -1;
+		hydrantPlace = -1;
+		hydrantRef.setText("");
 
 		setEnableButtons();
 	}
 
 	private void setEnableButtons() {
-		if (hydrant_type == -1) {
-			hydrant_add.setEnabled(false);
-			hydrant_add_wp.setEnabled(false);
-		} else if (hydrant_type == WPOINT) {
-			hydrant_add.setEnabled(true);
-			hydrant_add_wp.setEnabled(false);
+		if (hydrantType == -1 || location == null) {
+			hydrantAdd.setEnabled(false);
+			hydrantAddWp.setEnabled(false);
+		} else if (hydrantType == PILLAR || hydrantType == UNDERGROUND) {
+			hydrantAdd.setEnabled(true);
+			hydrantAddWp.setEnabled(true);
 		} else {
-			hydrant_add.setEnabled(true);
-			hydrant_add_wp.setEnabled(true);
+			hydrantAdd.setEnabled(true);
+			hydrantAddWp.setEnabled(false);
 		}
 	}
 
@@ -361,7 +390,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					&& file.length() > 0
 					&& file.getPath()
 							.equals(((StApplication) this.getApplication()).osmWriter.path) == false) {
-				new Thread(new HttpFileUpload(urlServer, file, name, this))
+				new Thread(new HttpFileUpload(URL_SERVER, file, name, this))
 						.start();
 			}
 		}
@@ -411,13 +440,13 @@ public class MainActivity extends Activity implements OnClickListener,
 	public void onGpsStatusChanged(int event) {
 		switch (event) {
 		case GpsStatus.GPS_EVENT_STARTED:
-			status_label.setText(R.string.statusStartedString);
+			statusLabel.setText(R.string.statusStartedString);
 			break;
 		case GpsStatus.GPS_EVENT_STOPPED:
-			status_label.setText(R.string.statusStoppedString);
+			statusLabel.setText(R.string.statusStoppedString);
 			break;
 		case GpsStatus.GPS_EVENT_FIRST_FIX:
-			status_label.setText(R.string.statusFixString);
+			statusLabel.setText(R.string.statusFixString);
 			break;
 		case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
 			GpsStatus gpsStatus = locationManager.getGpsStatus(null);
@@ -431,7 +460,7 @@ public class MainActivity extends Activity implements OnClickListener,
 				}
 			}
 
-			status_label.setText("Sat:" + usedSats + "/" + maxSats);
+			statusLabel.setText("Sat:" + usedSats + "/" + maxSats);
 			break;
 		}
 	}
@@ -456,8 +485,9 @@ public class MainActivity extends Activity implements OnClickListener,
 	@Override
 	public void onLocationChanged(Location location) {
 		this.location = location;
-		status_label.setText(getString(R.string.statusReadyString,
+		statusLabel.setText(getString(R.string.statusReadyString,
 				location.getAccuracy()));
+		setEnableButtons();
 	}
 
 	@Override
@@ -470,7 +500,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		return gesturedetector.onTouchEvent(event);
+		return gestureDetector.onTouchEvent(event);
 	}
 
 	@Override
@@ -619,15 +649,14 @@ public class MainActivity extends Activity implements OnClickListener,
 	}
 
 	private void showDialogAddPlace() {
-		final CharSequence[] places = { "Jezdnia", "£¹ka", "Zatoczka",
-				"Chodnik" };
+		final CharSequence[] places = { "Jezdnia", "£¹ka", "Zatoka", "Chodnik" };
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle("Wybierz miejsce");
 		alert.setSingleChoiceItems(places, -1,
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						hydrant_place = which;
+						hydrantPlace = which;
 						addHydrant();
 						dialog.cancel();
 					}
@@ -653,20 +682,37 @@ public class MainActivity extends Activity implements OnClickListener,
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						if (userInput.getText().length() > 0)
-							hydrant_size = Integer.parseInt(userInput.getText()
+							hydrantSize = Integer.parseInt(userInput.getText()
 									.toString());
 						else
-							hydrant_size = -1;
+							hydrantSize = -1;
 					}
 				})
-				.setNegativeButton("Cancel",
+				.setNegativeButton("Anuluj",
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								dialog.cancel();
+								changeViewColor(lastButtonId, null);
 							}
 						});
 
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
+	}
+
+	private void changeViewColor(Integer buttonResId, Integer color) {
+		if (buttonResId != null) {
+			View view = findViewById(buttonResId);
+			Drawable d = view.getBackground();
+			view.invalidateDrawable(d);
+
+			if (color != null) {
+				PorterDuffColorFilter filter = new PorterDuffColorFilter(color,
+						PorterDuff.Mode.SRC_ATOP);
+				d.setColorFilter(filter);
+			} else {
+				d.clearColorFilter();
+			}
+		}
 	}
 }

@@ -10,7 +10,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wpisz numer telefonu "
+        android:text="@string/input_phone"
         android:textAppearance="?android:attr/textAppearanceLarge" />
  
     <EditText

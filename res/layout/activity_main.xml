@@ -1,14 +1,11 @@
 <ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    
+
     android:id="@+id/viewSwitcher1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:inAnimation="@android:anim/slide_in_left"
     tools:context=".PikietazActivity" >
-
-    
-
 
     <LinearLayout 
     android:id="@+id/view2"
@@ -16,11 +13,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical"
     android:padding="10dp" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
 
         <TableLayout
             android:layout_width="match_parent"
@@ -32,22 +24,28 @@
                 android:layout_height="wrap_content" >
 
                 <ImageButton
-                    android:id="@+id/pillar_50"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/slup_75" />
+                    android:id="@+id/pillar_80"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/slup_80"
+                    android:contentDescription="@string/hydrant" />
 
                 <ImageButton
                     android:id="@+id/pillar_100"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/slup_110" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/slup_100"
+                    android:contentDescription="@string/hydrant" />
 
                 <ImageButton
                     android:id="@+id/pillar_x"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/slup_inny" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/slup_inny"
+                    android:contentDescription="@string/hydrant" />
             </TableRow>
 
             <TableRow
@@ -56,22 +54,28 @@
                 android:layout_height="wrap_content" >
 
                 <ImageButton
-                    android:id="@+id/underground_50"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ziem_75" />
+                    android:id="@+id/underground_80"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/ziem_80"
+                    android:contentDescription="@string/hydrant" />
 
                 <ImageButton
                     android:id="@+id/underground_100"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ziem_110" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/ziem_100"
+                    android:contentDescription="@string/hydrant" />
 
                 <ImageButton
                     android:id="@+id/underground_x"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ziem_inna" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/ziem_inna"
+                    android:contentDescription="@string/hydrant" />
             </TableRow>
 
             <TableRow
@@ -80,22 +84,28 @@
                 android:layout_height="wrap_content" >
 
                 <ImageButton
-                    android:id="@+id/wall_50"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/sciana_75" />
+                    android:id="@+id/wall_80"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/sciana_80"
+                    android:contentDescription="@string/hydrant" />
 
                 <ImageButton
                     android:id="@+id/wall_100"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/sciana_110" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/sciana_100"
+                    android:contentDescription="@string/hydrant" />
 
                 <ImageButton
                     android:id="@+id/wall_x"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/sciana_inna" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/sciana_inna"
+                    android:contentDescription="@string/hydrant" />
             </TableRow>
 
             <TableRow
@@ -105,28 +115,28 @@
 
                 <ImageButton
                     android:id="@+id/wpoint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/pc" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/pc"
+                    android:contentDescription="@string/hydrant" />
 
                 <Button
                     android:id="@+id/pond"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Suchy
-pion" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/dry" />
 
                 <Button
                     android:id="@+id/other"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Inny" />
-
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/other" />
             </TableRow>
 
         </TableLayout>
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -136,12 +146,12 @@ pion" />
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Numer ref.:"
+            android:text="@string/ref_number"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
             android:id="@+id/hydrant_ref"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:inputType="number" >
@@ -161,15 +171,14 @@ pion" />
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.50"
-            android:text="Dodaj" />
+            android:text="@string/add_button" />
 
         <Button
             android:id="@+id/hydrant_add_wp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.50"
-            android:text="Dodaj 
-z położeniem" />
+            android:text="@string/add_with_location_button" />
 
     </LinearLayout>
 
@@ -190,7 +199,7 @@ z położeniem" />
             android:layout_height="wrap_content"
             android:layout_below="@+id/add_button"
             android:layout_marginTop="37dp"
-            android:text="ref="
+            android:text="@string/road_number"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
@@ -202,7 +211,7 @@ z położeniem" />
             android:layout_marginLeft="14dp"
             android:layout_toRightOf="@+id/ref_label"
             android:ems="10"
-            android:text="0" >
+            android:inputType="text" >
 
             <requestFocus />
         </EditText>
@@ -215,41 +224,40 @@ z położeniem" />
             android:layout_toRightOf="@+id/ref_label"
             android:minHeight="100dp"
             android:minWidth="120dip"
-            android:text="-"
+            android:text="@string/minus"
             android:textSize="@dimen/Big" />
 
         <Button
             android:id="@+id/add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/pk_edit"
-            android:layout_below="@+id/pk_edit"
+            android:layout_alignRight="@+id/distance_edit"
+            android:layout_below="@+id/distance_edit"
             android:layout_marginTop="32dp"
             android:layout_toRightOf="@+id/ref_label"
             android:minHeight="100dp"
-            android:text="Dodaj" />
+            android:text="@string/add_button" />
 
         <EditText
-            android:id="@+id/pk_edit"
+            android:id="@+id/distance_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/minus_button"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/minus_button"
             android:ems="10"
-            android:inputType="number"
-            android:text="0" />
+            android:inputType="number" />
 
         <Button
             android:id="@+id/plus_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/pk_edit"
+            android:layout_above="@+id/distance_edit"
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@+id/minus_button"
             android:minHeight="100dp"
             android:minWidth="120dip"
-            android:text="+"
+            android:text="@string/plus"
             android:textSize="@dimen/Big" />
 
         <TextView
@@ -259,16 +267,15 @@ z położeniem" />
             android:layout_alignLeft="@+id/ref_label"
             android:layout_alignRight="@+id/ref_edit"
             android:layout_below="@+id/ref_edit"
-            android:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/pk_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/pk_edit"
+            android:layout_alignBottom="@+id/distance_edit"
             android:layout_alignParentLeft="true"
-            android:text="pk="
+            android:text="@string/distance"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
     

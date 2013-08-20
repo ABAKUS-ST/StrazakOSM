@@ -6,18 +6,17 @@
     android:padding="10dp" >
  
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textViewAuthor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Autor: Adam Jordanek"
+        android:text="@string/beta_author"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email: dotevo@gmail.com"
+        android:text="@string/beta_mail"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
  </LinearLayout>

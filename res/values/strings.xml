@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">Strażak</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">StrażakOSM</string>
+    <string name="action_settings">Ustawienia</string>
     <string name="add_button">Dodaj</string>
+    <string name="add_with_location_button">Dodaj z\npodaniem\npołożenia</string>
     <string name="errorGpsDisabled">Wyłączony GPS</string>
     <string name="systemSettings">Ustawienia systemu</string>
     <string name="quit">Wyjście</string>
@@ -21,5 +20,17 @@
 	<string name="yes">Tak</string>
 	<string name="no">Nie</string>
 	<string name="changeview">Zmień widok</string>
-	<string name="info">Info</string>
+	<string name="info">Informacje</string>
+	<string name="plus">+</string>
+	<string name="minus">-</string>
+	<string name="distance">Odległość=</string>
+	<string name="road_number">Numer drogi=</string>
+	<string name="ref_number">Numer ref.:</string>
+	<string name="dry">Suchy hydrant</string>
+	<string name="other">Inny</string>
+	<string name="hydrant">Hydrant</string>
+	<string name="input_phone">Wpisz numer telefonu </string>
+	<string name="input_size">Wpisz rozmiar </string>
+	<string name="beta_author">Autor: Adam Jordanek</string>
+	<string name="beta_mail">Email: dotevo@gmail.com</string>
 </resources>
