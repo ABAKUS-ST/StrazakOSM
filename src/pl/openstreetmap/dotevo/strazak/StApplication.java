@@ -5,29 +5,18 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import android.app.Application;
-import android.content.Context;
-import android.os.PowerManager;
 import android.util.Log;
 
 public class StApplication extends Application {
+
 	public OsmWriter osmWriter = null;
 	public String extStorage;
-	private PowerManager.WakeLock wl;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		extStorage = System.getenv().get("EXTERNAL_STORAGE");
 		newOSMFile();
-		PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "DoNotDimScreen");
-	}
-
-	@Override
-	public void onTerminate() {
-		super.onTerminate();
-		wl.acquire();
-
 	}
 
 	public void closeFile() {
@@ -37,6 +26,7 @@ public class StApplication extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		osmWriter = null;
 	}
 
@@ -51,6 +41,7 @@ public class StApplication extends Application {
 				return -1;
 			}
 		}
+
 		File kpmFolder2 = new File(extStorage + "/pikietaz/sended");
 		if (!kpmFolder2.exists()) {
 			if (!kpmFolder2.mkdir()) {
@@ -70,6 +61,7 @@ public class StApplication extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return 0;
 	}
 
@@ -82,5 +74,4 @@ public class StApplication extends Application {
 			e.printStackTrace();
 		}
 	}
-
 }

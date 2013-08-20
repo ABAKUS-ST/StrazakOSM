@@ -1,19 +1,8 @@
 package pl.openstreetmap.dotevo.strazak;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Calendar;
 import java.util.HashMap;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,6 +26,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -45,6 +35,7 @@ import android.widget.ViewSwitcher;
 
 public class MainActivity extends Activity implements OnClickListener,
 		LocationListener, Listener, HttpFileUploadResponse, OnGestureListener {
+
 	private static final int REQUEST_GPS_ENABLE = 1;
 	private static final int PILLAR = 1;
 	private static final int UNDERGROUND = 2;
@@ -52,19 +43,16 @@ public class MainActivity extends Activity implements OnClickListener,
 	private static final int POND = 4;
 	private static final int OTHER = 100;
 	private static final int WPOINT = 100;
+	private static final int SWIPE_MIN_VELOCITY = 100;
+	private static final int SWIPE_MIN_DISTANCE = 100;
 
 	private EditText ref_edit;
 	private EditText pk_edit;
 	private TextView status_label;
 	private Button add_button;
 	private LocationManager locationManager = null;
-	private static final long locationUpdateMinTimeMs = 0; // minimum time for
-															// location updates
-															// in ms
-	private static final float locationUpdateMinDistance = 0; // minimum
-																// distance for
-																// location
-																// updates in m
+	private static final long locationUpdateMinTimeMs = 0;
+	private static final float locationUpdateMinDistance = 0;
 	private Location location;
 
 	ViewSwitcher switcher;
@@ -74,23 +62,27 @@ public class MainActivity extends Activity implements OnClickListener,
 	int hydrant_size = -1;
 	int hydrant_type = -1;
 	int hydrant_place = -1;
+
 	private Button hydrant_add;
 	private Button hydrant_add_wp;
 	private EditText hydrant_ref;
-
 	private GestureDetector gesturedetector = null;
 
 	private int lastclick = 0;
+	private String urlServer = "http://mapa.abakus.net.pl/mil_up/up1.php";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 		// check for GPS
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			showDialogGpsDisabled();
 		}
+
 		location = locationManager
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -146,7 +138,6 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		gesturedetector = new GestureDetector(this, this);
 		setEnableButtons();
-
 	}
 
 	@Override
@@ -189,6 +180,7 @@ public class MainActivity extends Activity implements OnClickListener,
 				Log.e("Pikietaz", "no location!");
 				return;
 			}
+
 			HashMap<String, String> tags = new HashMap<String, String>();
 			tags.put("highway", "milestone");
 			tags.put("pk", pk_edit.getText().toString());
@@ -202,6 +194,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			} catch (IOException e) {
 				showDialogFatalError(R.string.errorFileOpen);
 			}
+
 			Toast.makeText(this, "pk=" + pk_edit.getText().toString(),
 					Toast.LENGTH_LONG).show();
 			pk_edit.setText(""
@@ -262,15 +255,14 @@ public class MainActivity extends Activity implements OnClickListener,
 		case R.id.wpoint:
 			hydrant_type = WPOINT;
 			break;
-
 		case R.id.hydrant_add:
 			addHydrant();
 			break;
 		case R.id.hydrant_add_wp:
 			showDialogAddPlace();
 			break;
-
 		}
+
 		setEnableButtons();
 	}
 
@@ -292,6 +284,7 @@ public class MainActivity extends Activity implements OnClickListener,
 			type = "pond";
 
 		HashMap<String, String> tags = new HashMap<String, String>();
+
 		if (hydrant_type != WPOINT)
 			tags.put("emergency", "fire_hydrant");
 		if (hydrant_type != OTHER)
@@ -299,41 +292,41 @@ public class MainActivity extends Activity implements OnClickListener,
 		if (hydrant_size != -1)
 			tags.put("fire_hydrant:diameter", String.valueOf(hydrant_size));
 
-		if (hydrant_place == 0) {
+		if (hydrant_place == 0)
 			tags.put("fire_hydrant:position", "lane");
-		}
-		if (hydrant_place == 1) {
+		if (hydrant_place == 1)
 			tags.put("fire_hydrant:position", "green");
-		}
-		if (hydrant_place == 2) {
+		if (hydrant_place == 2)
 			tags.put("fire_hydrant:position", "parking lot");
-		}
-		if (hydrant_place == 3) {
+		if (hydrant_place == 3)
 			tags.put("fire_hydrant:position", "sidewalk");
-		}
 
-		if (hydrant_ref.getText().length() > 0)
+		if (hydrant_ref.getText().length() > 0) {
 			tags.put("ref", hydrant_ref.getText().toString());
-
-		else {
+		} else {
 			tags.put("emergency", "suction_point");
 		}
 
 		try {
-			if (((StApplication) this.getApplication()).osmWriter == null)
+			if (((StApplication) this.getApplication()).osmWriter == null) {
 				((StApplication) this.getApplication()).newOSMFile();
+			}
+
 			((StApplication) this.getApplication()).osmWriter.addNode(
 					location.getLatitude(), location.getLongitude(), tags);
 		} catch (IOException e) {
 			showDialogFatalError(R.string.errorFileOpen);
 			return;
 		}
+
 		Toast.makeText(this, "Nowy hydrant typu:" + type, Toast.LENGTH_LONG)
 				.show();
+
 		hydrant_type = -1;
 		hydrant_size = -1;
 		hydrant_place = -1;
 		hydrant_ref.setText("");
+
 		setEnableButtons();
 	}
 
@@ -341,7 +334,6 @@ public class MainActivity extends Activity implements OnClickListener,
 		if (hydrant_type == -1) {
 			hydrant_add.setEnabled(false);
 			hydrant_add_wp.setEnabled(false);
-
 		} else if (hydrant_type == WPOINT) {
 			hydrant_add.setEnabled(true);
 			hydrant_add_wp.setEnabled(false);
@@ -356,8 +348,6 @@ public class MainActivity extends Activity implements OnClickListener,
 		super.onBackPressed();
 		closeApplication();
 	}
-
-	String urlServer = "http://mapa.abakus.net.pl/mil_up/up1.php";
 
 	public void sendData(String name) {
 		// New File
@@ -410,6 +400,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 				showDialogGpsDisabled();
 			}
+
 			break;
 		default:
 			super.onActivityResult(requestCode, resultCode, data);
@@ -439,6 +430,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					usedSats++;
 				}
 			}
+
 			status_label.setText("Sat:" + usedSats + "/" + maxSats);
 			break;
 		}
@@ -474,7 +466,6 @@ public class MainActivity extends Activity implements OnClickListener,
 			file.renameTo(new File(file.getParent() + "/sended/"
 					+ file.getName()));
 		}
-
 	}
 
 	@Override
@@ -484,12 +475,8 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	@Override
 	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
 		return false;
 	}
-
-	int SWIPE_MIN_VELOCITY = 100;
-	int SWIPE_MIN_DISTANCE = 100;
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
@@ -508,8 +495,8 @@ public class MainActivity extends Activity implements OnClickListener,
 			if (ev1X > ev2X)// Switch Left
 			{
 				previousView();
-			} else// Switch Right
-			{
+			} else {
+				// Switch Right
 				nextView();
 			}
 		}
@@ -519,7 +506,6 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-
 	}
 
 	@Override
@@ -530,7 +516,6 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	@Override
 	public void onShowPress(MotionEvent e) {
-
 	}
 
 	@Override
@@ -544,7 +529,6 @@ public class MainActivity extends Activity implements OnClickListener,
 		switcher.setInAnimation(this, R.anim.in_animation1);
 		switcher.setOutAnimation(this, R.anim.out_animation1);
 		switcher.showPrevious();
-
 	}
 
 	private void nextView() {
@@ -552,7 +536,6 @@ public class MainActivity extends Activity implements OnClickListener,
 		switcher.setInAnimation(this, R.anim.in_animation);
 		switcher.setOutAnimation(this, R.anim.out_animation);
 		switcher.showNext();
-
 	}
 
 	// =============================Alerts========================================
@@ -686,5 +669,4 @@ public class MainActivity extends Activity implements OnClickListener,
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
 	}
-
 }

@@ -1,11 +1,11 @@
 package pl.openstreetmap.dotevo.strazak;
 
-import java.io.DataInputStream;
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,6 +13,7 @@ import java.net.URL;
 import android.util.Log;
 
 public class HttpFileUpload implements Runnable {
+
 	URL connectURL;
 	String responseString;
 	byte[] dataToServer;
@@ -71,12 +72,10 @@ public class HttpFileUpload implements Runnable {
 			int bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
 			while (bytesRead > 0) {
-
 				dos.write(buffer, 0, bufferSize);
 				bytesAvailable = fileInputStream.available();
 				bufferSize = Math.min(bytesAvailable, maxBufferSize);
 				bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
 			}
 
 			// send multipart form data necesssary after file data...
@@ -96,19 +95,17 @@ public class HttpFileUpload implements Runnable {
 			response.uploadResponse(code, file);
 
 			try {
+				BufferedReader inStream = new BufferedReader(
+						new InputStreamReader(conn.getInputStream()));
 
-				DataInputStream inStream = new DataInputStream(
-						conn.getInputStream());
 				String str;
 
 				while ((str = inStream.readLine()) != null) {
 
 					Log.e("Debug", str);
-
 				}
 
 				inStream.close();
-
 			} catch (IOException ioex) {
 				Log.e("Debug", "error: " + ioex.getMessage(), ioex);
 			}

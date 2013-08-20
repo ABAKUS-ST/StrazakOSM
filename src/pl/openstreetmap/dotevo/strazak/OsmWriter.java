@@ -17,8 +17,8 @@ import android.util.Log;
 /* File from org.osm.kaypadmapper2
  * Thanks to God for OpenSource! :-)
  */
-
 public class OsmWriter {
+
 	private BufferedWriter osmFile;
 	public String path;
 	private int newNodeId = -1;
@@ -72,9 +72,11 @@ public class OsmWriter {
 					// found end of file without </osm> - file is damaged,
 					// delete temporary file
 					osmFile.close();
+					oldOsmReader.close();
 					tempOsmFile.delete();
 					throw new FileFormatException();
 				}
+
 				if (line.trim().equalsIgnoreCase("</osm>")) {
 					// replace file
 					osmFile.flush();
@@ -126,6 +128,7 @@ public class OsmWriter {
 			osmFile.write("\t\t<tag k=\"" + entry.getKey() + "\" v=\""
 					+ entry.getValue() + "\"/>\n");
 		}
+
 		osmFile.write("\t</node>\n");
 	}
 
