@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class StApplication extends Application {
 
-	public OsmWriter osmWriter = null;
+	public OsmWriter osmWriter;
 	public String extStorage;
 
 	@Override
@@ -19,11 +19,24 @@ public class StApplication extends Application {
 		newOSMFile();
 	}
 
-	public void closeFile() {
+	public void flushFile() {
 		try {
-			osmWriter.close();
+			if (osmWriter != null) {
+				osmWriter.flush();
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void closeFile() {
+		flushFile();
+
+		try {
+			if (osmWriter != null) {
+				osmWriter.close();
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -31,18 +44,16 @@ public class StApplication extends Application {
 	}
 
 	public int newOSMFile() {
-		if (osmWriter != null) {
-			closeFile();
-		}
+		closeFile();
 
-		File kpmFolder = new File(extStorage + "/pikietaz");
+		File kpmFolder = new File(extStorage + "/StrazakOSM");
 		if (!kpmFolder.exists()) {
 			if (!kpmFolder.mkdir()) {
 				return -1;
 			}
 		}
 
-		File kpmFolder2 = new File(extStorage + "/pikietaz/sended");
+		File kpmFolder2 = new File(extStorage + "/StrazakOSM/sended");
 		if (!kpmFolder2.exists()) {
 			if (!kpmFolder2.mkdir()) {
 				return -2;
@@ -63,15 +74,5 @@ public class StApplication extends Application {
 		}
 
 		return 0;
-	}
-
-	public void flushFile() {
-		try {
-			if (osmWriter != null)
-				osmWriter.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

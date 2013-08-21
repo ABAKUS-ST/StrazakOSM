@@ -1,191 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:id="@+id/viewSwitcher1"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:inAnimation="@android:anim/slide_in_left"
-    tools:context=".PikietazActivity" >
+    tools:context=".MainActivity" >
 
-    <LinearLayout 
-    android:id="@+id/view2"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:padding="10dp" >
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TableRow
-                android:id="@+id/tableRow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <ImageButton
-                    android:id="@+id/pillar_80"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/slup_80"
-                    android:contentDescription="@string/hydrant" />
-
-                <ImageButton
-                    android:id="@+id/pillar_100"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/slup_100"
-                    android:contentDescription="@string/hydrant" />
-
-                <ImageButton
-                    android:id="@+id/pillar_x"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/slup_inny"
-                    android:contentDescription="@string/hydrant" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <ImageButton
-                    android:id="@+id/underground_80"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/ziem_80"
-                    android:contentDescription="@string/hydrant" />
-
-                <ImageButton
-                    android:id="@+id/underground_100"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/ziem_100"
-                    android:contentDescription="@string/hydrant" />
-
-                <ImageButton
-                    android:id="@+id/underground_x"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/ziem_inna"
-                    android:contentDescription="@string/hydrant" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <ImageButton
-                    android:id="@+id/wall_80"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/sciana_80"
-                    android:contentDescription="@string/hydrant" />
-
-                <ImageButton
-                    android:id="@+id/wall_100"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/sciana_100"
-                    android:contentDescription="@string/hydrant" />
-
-                <ImageButton
-                    android:id="@+id/wall_x"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/sciana_inna"
-                    android:contentDescription="@string/hydrant" />
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/tableRow4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <ImageButton
-                    android:id="@+id/wpoint"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:src="@drawable/pc"
-                    android:contentDescription="@string/hydrant" />
-
-                <Button
-                    android:id="@+id/pond"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/dry" />
-
-                <Button
-                    android:id="@+id/other"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/other" />
-            </TableRow>
-
-        </TableLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ref_number"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/hydrant_ref"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="number" >
-
-            <requestFocus />
-        </EditText>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TableLayout
+        android:id="@+id/view1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:padding="10dp" >
 
-        <Button
-            android:id="@+id/hydrant_add"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.50"
-            android:text="@string/add_button" />
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
 
-        <Button
-            android:id="@+id/hydrant_add_wp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0.50"
-            android:text="@string/add_with_location_button" />
+            <ImageButton
+                android:id="@+id/pillar_80"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/slup_80" />
 
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/pillar_100"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/slup_100" />
 
- </LinearLayout>
- 
-   <RelativeLayout
-        android:id="@+id/view1"
+            <ImageButton
+                android:id="@+id/pillar_x"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/slup_inny" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <ImageButton
+                android:id="@+id/underground_80"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/ziem_80" />
+
+            <ImageButton
+                android:id="@+id/underground_100"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/ziem_100" />
+
+            <ImageButton
+                android:id="@+id/underground_x"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/ziem_inna" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <ImageButton
+                android:id="@+id/wall_80"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/sciana_80" />
+
+            <ImageButton
+                android:id="@+id/wall_100"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/sciana_100" />
+
+            <ImageButton
+                android:id="@+id/wall_x"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/sciana_inna" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <ImageButton
+                android:id="@+id/wpoint"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:contentDescription="@string/hydrant"
+                android:src="@drawable/pc" />
+
+            <Button
+                android:id="@+id/pond"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/dry" />
+
+            <Button
+                android:id="@+id/other"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/other" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow5"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingTop="10dp" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ref_number"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/hydrant_ref"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow6"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+
+            <Button
+                android:id="@+id/hydrant_add"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add_button" />
+
+            <Button
+                android:id="@+id/hydrant_add_wp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/add_with_location_button" />
+        </TableRow>
+    </TableLayout>
+
+    <RelativeLayout
+        android:id="@+id/view2"
         android:layout_width="match_parent"
         android:layout_height="455dp"
         android:paddingBottom="@dimen/activity_vertical_margin"
@@ -261,15 +257,6 @@
             android:textSize="@dimen/Big" />
 
         <TextView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ref_label"
-            android:layout_alignRight="@+id/ref_edit"
-            android:layout_below="@+id/ref_edit"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
             android:id="@+id/pk_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -278,6 +265,5 @@
             android:text="@string/distance"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
-    
-    
+
 </ViewSwitcher>
