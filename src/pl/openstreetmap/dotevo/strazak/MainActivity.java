@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.GpsStatus.Listener;
@@ -14,6 +15,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.text.method.LinkMovementMethod;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
@@ -142,7 +146,7 @@ public class MainActivity extends Activity implements LocationListener,
 			closeApplication();
 			return true;
 		case R.id.upload:
-			showDialogUpload();
+			showDialogUploadWarning();
 			return true;
 		case R.id.changeview:
 			nextView();
@@ -313,7 +317,8 @@ public class MainActivity extends Activity implements LocationListener,
 
 	public void showDialogFatalError(int messageId) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(messageId)
+		builder.setTitle(R.string.error)
+				.setMessage(messageId)
 				.setCancelable(false)
 				.setNegativeButton(R.string.quit,
 						new DialogInterface.OnClickListener() {
@@ -330,7 +335,7 @@ public class MainActivity extends Activity implements LocationListener,
 			isGpsWarningShown = true;
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.errorGpsDisabled)
+			builder.setTitle(R.string.errorGpsDisabled)
 					.setCancelable(false)
 					.setNegativeButton(R.string.quit,
 							new DialogInterface.OnClickListener() {
@@ -354,21 +359,55 @@ public class MainActivity extends Activity implements LocationListener,
 		}
 	}
 
+	private void showDialogUploadWarning() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.warning)
+				.setMessage(R.string.send_warning)
+				.setPositiveButton("Dalej",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								showDialogUpload();
+							}
+						});
+
+		builder.show();
+	}
+
 	private void showDialogUpload() {
 		LayoutInflater li = LayoutInflater.from(this);
-		View promptsView = li.inflate(R.layout.namedialog, null);
+		View promptsView = li.inflate(R.layout.name_dialog, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setView(promptsView);
 
 		final EditText userInput = (EditText) promptsView
 				.findViewById(R.id.editTextDialogUserInput);
 
+		new Handler().postDelayed(new Runnable() {
+
+			public void run() {
+				MotionEvent downEvent = MotionEvent.obtain(
+						SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_DOWN, 0, 0, 0);
+				MotionEvent upEvent = MotionEvent.obtain(
+						SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_UP, 0, 0, 0);
+
+				userInput.dispatchTouchEvent(downEvent);
+				userInput.dispatchTouchEvent(upEvent);
+
+				downEvent.recycle();
+				upEvent.recycle();
+			}
+		}, 200);
+
 		builder.setCancelable(false)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						sendData(userInput.getText().toString());
-					}
-				}).setNegativeButton("Anuluj", null);
+				.setTitle(R.string.input_phone)
+				.setPositiveButton("Wyœlij",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								sendData(userInput.getText().toString());
+							}
+						}).setNegativeButton("Anuluj", null);
 
 		builder.show();
 	}
@@ -378,6 +417,25 @@ public class MainActivity extends Activity implements LocationListener,
 		View promptsView = li.inflate(R.layout.info, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setView(promptsView);
+
+		TextView emailText = (TextView) promptsView
+				.findViewById(R.id.textViewMail);
+		emailText.setMovementMethod(LinkMovementMethod.getInstance());
+
+		TextView authorText = (TextView) promptsView
+				.findViewById(R.id.textViewAuthor);
+		authorText.setMovementMethod(LinkMovementMethod.getInstance());
+
+		TextView versionText = (TextView) promptsView
+				.findViewById(R.id.textViewVersion);
+		try {
+			versionText
+					.setText("Wersja "
+							+ getPackageManager().getPackageInfo(
+									getPackageName(), 0).versionName);
+		} catch (NameNotFoundException e) {
+			versionText.setVisibility(View.GONE);
+		}
 
 		builder.setCancelable(false).setPositiveButton("OK", null);
 

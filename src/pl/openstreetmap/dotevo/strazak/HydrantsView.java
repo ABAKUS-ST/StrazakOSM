@@ -8,7 +8,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -62,17 +65,15 @@ public class HydrantsView implements OnClickListener {
 	}
 
 	@Override
-	public void onClick(View arg0) {
-		changeViewColor(lastButtonId, null);
-
-		lastButtonId = arg0.getId();
-
-		if (lastButtonId != R.id.hydrant_add
-				&& lastButtonId != R.id.hydrant_add_wp) {
+	public void onClick(View view) {
+		if (view.getId() != R.id.hydrant_add
+				&& view.getId() != R.id.hydrant_add_wp) {
+			changeViewColor(lastButtonId, null);
+			lastButtonId = view.getId();
 			changeViewColor(lastButtonId, Color.GREEN);
 		}
 
-		switch (arg0.getId()) {
+		switch (view.getId()) {
 		case R.id.pillar_80:
 			hydrantSize = 80;
 			hydrantType = PILLAR;
@@ -143,6 +144,8 @@ public class HydrantsView implements OnClickListener {
 	}
 
 	private void addHydrant() {
+		changeViewColor(lastButtonId, null);
+
 		if (mainActivity.getLocation() == null) {
 			Toast.makeText(mainActivity, "Poczekaj na ustalenie pozycji GPS",
 					Toast.LENGTH_LONG).show();
@@ -230,34 +233,55 @@ public class HydrantsView implements OnClickListener {
 	private void showDialogAddPlace() {
 		final CharSequence[] places = { "Droga", "Trawa", "Zatoka", "Chodnik" };
 		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-		builder.setTitle("Wybierz miejsce");
-		builder.setSingleChoiceItems(places, -1,
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						hydrantPlace = which;
-						addHydrant();
-					}
-				}).setNegativeButton("Anuluj",
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						hydrantPlace = -1;
-					}
-				});
+		builder.setTitle(R.string.pick_place)
+				.setSingleChoiceItems(places, -1,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								hydrantPlace = which;
+								addHydrant();
+								dialog.cancel();
+							}
+						})
+				.setNegativeButton("Anuluj",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								hydrantPlace = -1;
+							}
+						});
 
 		builder.show();
 	}
 
 	private void showDialogNumber() {
 		LayoutInflater li = LayoutInflater.from(mainActivity);
-		View promptsView = li.inflate(R.layout.number, null);
+		View promptsView = li.inflate(R.layout.number_dialog, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
 		builder.setView(promptsView);
 
 		final EditText userInput = (EditText) promptsView
 				.findViewById(R.id.editTextDialogUserInput);
 
-		builder.setCancelable(false)
+		new Handler().postDelayed(new Runnable() {
+
+			public void run() {
+				MotionEvent downEvent = MotionEvent.obtain(
+						SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_DOWN, 0, 0, 0);
+				MotionEvent upEvent = MotionEvent.obtain(
+						SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+						MotionEvent.ACTION_UP, 0, 0, 0);
+
+				userInput.dispatchTouchEvent(downEvent);
+				userInput.dispatchTouchEvent(upEvent);
+
+				downEvent.recycle();
+				upEvent.recycle();
+			}
+		}, 200);
+
+		builder.setTitle(R.string.input_size)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						if (userInput.getText().length() > 0) {

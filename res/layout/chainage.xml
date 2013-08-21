@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="455dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
+
+        <TextView
+            android:id="@+id/ref_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_button"
+            android:layout_marginTop="37dp"
+            android:text="@string/road_number"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/ref_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/add_button"
+            android:layout_alignTop="@+id/ref_label"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/ref_label"
+            android:ems="10"
+            android:inputType="text" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/minus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ref_label"
+            android:minHeight="100dp"
+            android:minWidth="120dip"
+            android:text="@string/minus"
+            android:textSize="@dimen/Big" />
+
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/distance_edit"
+            android:layout_below="@+id/distance_edit"
+            android:layout_marginTop="32dp"
+            android:layout_toRightOf="@+id/ref_label"
+            android:minHeight="100dp"
+            android:text="@string/add_button" />
+
+        <EditText
+            android:id="@+id/distance_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/minus_button"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/minus_button"
+            android:ems="10"
+            android:inputType="number" />
+
+        <Button
+            android:id="@+id/plus_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/distance_edit"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/minus_button"
+            android:minHeight="100dp"
+            android:minWidth="120dip"
+            android:text="@string/plus"
+            android:textSize="@dimen/Big" />
+
+        <TextView
+            android:id="@+id/pk_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/distance_edit"
+            android:layout_alignParentLeft="true"
+            android:text="@string/distance"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>

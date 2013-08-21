@@ -29,8 +29,14 @@
 	<string name="dry">Suchy hydrant</string>
 	<string name="other">Inny</string>
 	<string name="hydrant">Hydrant</string>
-	<string name="input_phone">Wpisz numer telefonu </string>
-	<string name="input_size">Wpisz rozmiar </string>
-	<string name="beta_author">Autor: Adam Jordanek</string>
-	<string name="beta_mail">Email: dotevo@gmail.com</string>
+	<string name="input_phone">Twój nr tel lub e-mail </string>
+	<string name="input_size">Wymiar </string>
+	<string name="author">Projekt, wersja beta: Adam Jordanek (<a href ="mailto:dotevo@gmail.com">dotevo@gmail.com</a>)\nWersja finalna: Abakus Systemy Teleinformatyczne Sp. z o.o.\nLicencja GPL</string>
+	<string name="mail"><a href ="http://www.abakus.net.pl">www.abakus.net.pl</a>\n<a href ="mailto:info@abakus.net.pl">info@abakus.net.pl</a></string>
+	<string name="mail_land"><a href ="http://www.abakus.net.pl">www.abakus.net.pl</a>  <a href ="mailto:info@abakus.net.pl">info@abakus.net.pl</a></string>
+	<string name="logo">Logo</string>
+	<string name="send_warning">Pamiętaj, aby po przesłaniu danych na serwer firmy Abakus potwierdzić ich autentyczność drogą e-mail lub telefonicznie. Tylko zweryfikowane dane będą dodawane do bazy danych projektu OSM</string>
+	<string name="warning">Uwaga</string>
+	<string name="error">Błąd</string>
+	<string name="pick_place">Wybierz miejsce</string>
 </resources>
