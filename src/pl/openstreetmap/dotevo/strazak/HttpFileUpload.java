@@ -1,11 +1,8 @@
 package pl.openstreetmap.dotevo.strazak;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,7 +41,7 @@ public class HttpFileUpload implements Runnable {
 		String Tag = "Upload";
 		try {
 			FileInputStream fileInputStream = new FileInputStream(file);
-			Log.e(Tag, "Starting Http File Sending to URL");
+
 			// Open a HTTP connection to the URL
 			HttpURLConnection conn = (HttpURLConnection) connectURL
 					.openConnection();
@@ -81,38 +78,20 @@ public class HttpFileUpload implements Runnable {
 			// send multipart form data necesssary after file data...
 			dos.writeBytes(lineEnd);
 			dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
 			// close streams
 			int code = conn.getResponseCode();
-			String serverResponseMessage = conn.getResponseMessage();
-
-			Log.i("uploadFile", "HTTP Response is : " + serverResponseMessage
-					+ ": " + code);
 
 			fileInputStream.close();
 			dos.flush();
 			dos.close();
 
 			response.uploadResponse(code, file);
-
-			try {
-				BufferedReader inStream = new BufferedReader(
-						new InputStreamReader(conn.getInputStream()));
-
-				String str;
-
-				while ((str = inStream.readLine()) != null) {
-
-					Log.e("Debug", str);
-				}
-
-				inStream.close();
-			} catch (IOException ioex) {
-				Log.e("Debug", "error: " + ioex.getMessage(), ioex);
-			}
 		} catch (MalformedURLException ex) {
 			Log.e(Tag, "URL error: " + ex.getMessage(), ex);
-		} catch (IOException ioe) {
-			Log.e(Tag, "IO error: " + ioe.getMessage(), ioe);
+		} catch (Exception e) {
+			response.uploadResponse(-1, file);
+			Log.e(Tag, "IO error: " + e.getMessage(), e);
 		}
 	}
 

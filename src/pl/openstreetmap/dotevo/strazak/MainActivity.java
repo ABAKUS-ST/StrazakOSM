@@ -4,9 +4,15 @@ import java.io.File;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.GpsStatus.Listener;
@@ -28,6 +34,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 public class MainActivity extends Activity implements LocationListener,
@@ -40,9 +47,14 @@ public class MainActivity extends Activity implements LocationListener,
 	private static final float LOCATION_UPDATE_MIN_DISTANCE = 0;
 	private static final String URL_SERVER = "http://mapa.abakus.net.pl/mil_up/up1.php";
 
+	public static final String SETTINGS_FILE = "strazak_osm_settings";
+	public static final String SELECTED_VIEW_SETTING = "selected_view";
+	public static final String LAST_ROADS_SETTING = "last_roads";
+
 	private ViewSwitcher switcher;
 	private GestureDetector gestureDetector;
 	private LocationManager locationManager;
+	private Handler handler;
 
 	private HydrantsView hydrantsView;
 	private ChainageView chainageView;
@@ -58,6 +70,8 @@ public class MainActivity extends Activity implements LocationListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+		handler = new Handler();
 
 		// check for GPS
 		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -83,12 +97,6 @@ public class MainActivity extends Activity implements LocationListener,
 
 		switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher1);
 
-		locationManager
-				.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-						LOCATION_UPDATE_MIN_TIME_MS,
-						LOCATION_UPDATE_MIN_DISTANCE, this);
-		locationManager.addGpsStatusListener(this);
-
 		gestureDetector = new GestureDetector(this, this);
 
 		hydrantsView = new HydrantsView(this);
@@ -96,69 +104,51 @@ public class MainActivity extends Activity implements LocationListener,
 	}
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-		((StApplication) getApplication()).flushFile();
-	}
+	protected void onResume() {
+		super.onResume();
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		locationManager.removeUpdates(this);
-	}
+		locationManager
+				.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+						LOCATION_UPDATE_MIN_TIME_MS,
+						LOCATION_UPDATE_MIN_DISTANCE, this);
+		locationManager.addGpsStatusListener(this);
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+		SharedPreferences settings = getSharedPreferences(SETTINGS_FILE,
+				Context.MODE_PRIVATE);
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		closeApplication();
-	}
-
-	public void sendData(String name) {
-		((StApplication) getApplication()).newOSMFile();
-		File kpmFolder = new File(((StApplication) getApplication()).extStorage
-				+ "/StrazakOSM");
-		File[] files = kpmFolder.listFiles();
-		for (File file : files) {
-			if (file.isFile()
-					&& file.length() > 0
-					&& file.getPath().equals(
-							((StApplication) getApplication()).osmWriter.path) == false) {
-				new Thread(new HttpFileUpload(URL_SERVER, file, name, this))
-						.start();
+		if (settings.contains(SELECTED_VIEW_SETTING)) {
+			int selectedView = switcher.getDisplayedChild();
+			int lastSelectedView = settings.getInt(SELECTED_VIEW_SETTING, 0);
+			if (selectedView != lastSelectedView) {
+				switcher.setDisplayedChild(lastSelectedView);
 			}
 		}
 	}
 
-	public void closeApplication() {
+	@Override
+	protected void onPause() {
+		super.onPause();
+
+		((StApplication) getApplication()).flushFile();
+
+		locationManager.removeUpdates(this);
+		locationManager.removeGpsStatusListener(this);
+
+		Editor settingsEdit = getSharedPreferences(SETTINGS_FILE,
+				Context.MODE_PRIVATE).edit();
+		settingsEdit
+				.putInt(SELECTED_VIEW_SETTING, switcher.getDisplayedChild());
+		settingsEdit.commit();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
 		((StApplication) getApplication()).closeFile();
-		finish();
 	}
 
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.quit:
-			closeApplication();
-			return true;
-		case R.id.upload:
-			showDialogUploadWarning();
-			return true;
-		case R.id.changeview:
-			nextView();
-			return true;
-		case R.id.info:
-			showDialogInfo();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case REQUEST_GPS_ENABLE:
@@ -172,6 +162,33 @@ public class MainActivity extends Activity implements LocationListener,
 			break;
 		default:
 			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.quit:
+			finish();
+			return true;
+		case R.id.upload:
+			showDialogUploadWarning();
+			return true;
+		case R.id.changeview:
+			nextView();
+			return true;
+		case R.id.info:
+			showDialogInfo();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -208,7 +225,7 @@ public class MainActivity extends Activity implements LocationListener,
 				gpsText = "znakomity (7+)";
 			}
 
-			this.setTitle("Stra¿akOSM. GPS: " + gpsText);
+			this.setTitle(getString(R.string.app_name) + ". GPS: " + gpsText);
 			break;
 		}
 	}
@@ -239,10 +256,35 @@ public class MainActivity extends Activity implements LocationListener,
 	}
 
 	@Override
-	public void uploadResponse(int code, File file) {
+	public void uploadResponse(final int code, final File file) {
 		if (code == 200) {
 			file.renameTo(new File(file.getParent() + "/sended/"
 					+ file.getName()));
+
+			handler.post(new Runnable() {
+
+				@Override
+				public void run() {
+					Toast.makeText(
+							MainActivity.this,
+							"Plik " + file.getName()
+									+ " zosta³ przes³any poprawnie",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		} else {
+			handler.post(new Runnable() {
+
+				@Override
+				public void run() {
+					Toast.makeText(
+							MainActivity.this,
+							"UWAGA! Przesy³anie pliku " + file.getName()
+									+ " nie powiod³o siê (b³¹d: " + code
+									+ ") SPRÓBUJ PONOWNIE", Toast.LENGTH_SHORT)
+							.show();
+				}
+			});
 		}
 	}
 
@@ -301,13 +343,50 @@ public class MainActivity extends Activity implements LocationListener,
 		return false;
 	}
 
-	public void previousView() {
+	public void changeViewColor(Integer viewResId, Integer color) {
+		if (viewResId != null) {
+			changeViewColor(findViewById(viewResId), color);
+		}
+	}
+
+	public void changeViewColor(View view, Integer color) {
+		if (view != null) {
+			Drawable d = view.getBackground();
+			view.invalidateDrawable(d);
+
+			if (color != null) {
+				PorterDuffColorFilter filter = new PorterDuffColorFilter(color,
+						PorterDuff.Mode.SRC_ATOP);
+				d.setColorFilter(filter);
+			} else {
+				d.clearColorFilter();
+			}
+		}
+	}
+
+	private void sendData(String name) {
+		((StApplication) getApplication()).newOSMFile();
+		File kpmFolder = new File(((StApplication) getApplication()).extStorage
+				+ "/StrazakOSM");
+		File[] files = kpmFolder.listFiles();
+		for (File file : files) {
+			if (file.isFile()
+					&& file.length() > 0
+					&& file.getPath().equals(
+							((StApplication) getApplication()).osmWriter.path) == false) {
+				new Thread(new HttpFileUpload(URL_SERVER, file, name, this))
+						.start();
+			}
+		}
+	}
+
+	private void previousView() {
 		switcher.setInAnimation(this, R.anim.in_animation1);
 		switcher.setOutAnimation(this, R.anim.out_animation1);
 		switcher.showPrevious();
 	}
 
-	public void nextView() {
+	private void nextView() {
 		switcher.setInAnimation(this, R.anim.in_animation);
 		switcher.setOutAnimation(this, R.anim.out_animation);
 		switcher.showNext();
@@ -323,7 +402,7 @@ public class MainActivity extends Activity implements LocationListener,
 				.setNegativeButton(R.string.quit,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								closeApplication();
+								finish();
 							}
 						});
 
@@ -336,12 +415,13 @@ public class MainActivity extends Activity implements LocationListener,
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.errorGpsDisabled)
+					.setMessage(R.string.queryGpsDisabled)
 					.setCancelable(false)
 					.setNegativeButton(R.string.quit,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) {
-									closeApplication();
+									finish();
 								}
 							})
 					.setPositiveButton(R.string.systemSettings,
@@ -363,7 +443,7 @@ public class MainActivity extends Activity implements LocationListener,
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.warning)
 				.setMessage(R.string.send_warning)
-				.setPositiveButton("Dalej",
+				.setPositiveButton(R.string.next,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								showDialogUpload();
@@ -382,7 +462,7 @@ public class MainActivity extends Activity implements LocationListener,
 		final EditText userInput = (EditText) promptsView
 				.findViewById(R.id.editTextDialogUserInput);
 
-		new Handler().postDelayed(new Runnable() {
+		handler.postDelayed(new Runnable() {
 
 			public void run() {
 				MotionEvent downEvent = MotionEvent.obtain(
@@ -402,12 +482,12 @@ public class MainActivity extends Activity implements LocationListener,
 
 		builder.setCancelable(false)
 				.setTitle(R.string.input_phone)
-				.setPositiveButton("Wyœlij",
+				.setPositiveButton(R.string.upload,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								sendData(userInput.getText().toString());
 							}
-						}).setNegativeButton("Anuluj", null);
+						}).setNegativeButton(R.string.cancel, null);
 
 		builder.show();
 	}
@@ -437,7 +517,7 @@ public class MainActivity extends Activity implements LocationListener,
 			versionText.setVisibility(View.GONE);
 		}
 
-		builder.setCancelable(false).setPositiveButton("OK", null);
+		builder.setCancelable(false).setPositiveButton(R.string.ok, null);
 
 		builder.show();
 	}

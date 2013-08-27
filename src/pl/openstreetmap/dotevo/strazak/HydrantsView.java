@@ -5,9 +5,6 @@ import java.util.HashMap;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -68,9 +65,9 @@ public class HydrantsView implements OnClickListener {
 	public void onClick(View view) {
 		if (view.getId() != R.id.hydrant_add
 				&& view.getId() != R.id.hydrant_add_wp) {
-			changeViewColor(lastButtonId, null);
+			mainActivity.changeViewColor(lastButtonId, null);
 			lastButtonId = view.getId();
-			changeViewColor(lastButtonId, Color.GREEN);
+			mainActivity.changeViewColor(lastButtonId, Color.GREEN);
 		}
 
 		switch (view.getId()) {
@@ -144,10 +141,10 @@ public class HydrantsView implements OnClickListener {
 	}
 
 	private void addHydrant() {
-		changeViewColor(lastButtonId, null);
+		mainActivity.changeViewColor(lastButtonId, null);
 
 		if (mainActivity.getLocation() == null) {
-			Toast.makeText(mainActivity, "Poczekaj na ustalenie pozycji GPS",
+			Toast.makeText(mainActivity, R.string.waitForFixGPS,
 					Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -204,7 +201,7 @@ public class HydrantsView implements OnClickListener {
 		}
 
 		Toast.makeText(mainActivity, "Nowy hydrant typu: " + type,
-				Toast.LENGTH_LONG).show();
+				Toast.LENGTH_SHORT).show();
 
 		hydrantType = -1;
 		hydrantSize = -1;
@@ -212,22 +209,6 @@ public class HydrantsView implements OnClickListener {
 		hydrantRef.setText("");
 
 		setEnableButtons();
-	}
-
-	private void changeViewColor(Integer buttonResId, Integer color) {
-		if (buttonResId != null) {
-			View view = mainActivity.findViewById(buttonResId);
-			Drawable d = view.getBackground();
-			view.invalidateDrawable(d);
-
-			if (color != null) {
-				PorterDuffColorFilter filter = new PorterDuffColorFilter(color,
-						PorterDuff.Mode.SRC_ATOP);
-				d.setColorFilter(filter);
-			} else {
-				d.clearColorFilter();
-			}
-		}
 	}
 
 	private void showDialogAddPlace() {
@@ -244,7 +225,7 @@ public class HydrantsView implements OnClickListener {
 								dialog.cancel();
 							}
 						})
-				.setNegativeButton("Anuluj",
+				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								hydrantPlace = -1;
@@ -282,17 +263,18 @@ public class HydrantsView implements OnClickListener {
 		}, 200);
 
 		builder.setTitle(R.string.input_size)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						if (userInput.getText().length() > 0) {
-							hydrantSize = Integer.parseInt(userInput.getText()
-									.toString());
-						} else {
-							hydrantSize = -1;
-						}
-					}
-				})
-				.setNegativeButton("Anuluj",
+				.setPositiveButton(R.string.ok,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								if (userInput.getText().length() > 0) {
+									hydrantSize = Integer.parseInt(userInput
+											.getText().toString());
+								} else {
+									hydrantSize = -1;
+								}
+							}
+						})
+				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								hydrantSize = -1;

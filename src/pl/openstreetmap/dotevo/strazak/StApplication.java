@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import android.app.Application;
-import android.util.Log;
 
 public class StApplication extends Application {
 
@@ -65,7 +64,6 @@ public class StApplication extends Application {
 
 		try {
 			String file = kpmFolder + "/" + basename + ".osm";
-			Log.i("New file", file);
 			osmWriter = new OsmWriter(file, false);
 		} catch (IOException e) {
 			return -3;

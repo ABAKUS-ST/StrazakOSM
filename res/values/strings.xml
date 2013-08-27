@@ -5,14 +5,19 @@
     <string name="add_button">Dodaj</string>
     <string name="add_with_location_button">Dodaj z podaniem położenia</string>
     <string name="errorGpsDisabled">Wyłączony GPS</string>
+    <string name="queryGpsDisabled">GPS jest wymagany do działania aplikacji</string>
     <string name="systemSettings">Ustawienia systemu</string>
     <string name="quit">Wyjście</string>
+    <string name="cancel">Anuluj</string>
+    <string name="ok">OK</string>
+    <string name="next">Dalej</string>
     <string name="errorStorageRO">Dysk tylko do odczytu</string>
     <string name="errorStorageUnavailable">Brak miejsca na dysku</string>
     <string name="statusNoGPS">StrażakOSM. GPS wyłączony</string>
     <string name="statusStartedGPS">StrażakOSM. GPS uruchomiony</string>
     <string name="statusStoppedGPS">StrażakOSM. GPS zatrzymany</string>
     <string name="statusFixGPS">StrażakOSM. Ustalono pozycję GPS</string>
+    <string name="waitForFixGPS">Poczekaj na ustalenie pozycji GPS</string>
 	<string name="FolderCreationFailed">Nie mogę utworzyć katalogu</string>
 	<string name="errorFileOpen">Błąd pliku</string>
 	<string name="upload">Wyślij</string>
@@ -23,8 +28,6 @@
 	<string name="info">Informacje</string>
 	<string name="plus">+</string>
 	<string name="minus">-</string>
-	<string name="distance">Odległość=</string>
-	<string name="road_number">Numer drogi=</string>
 	<string name="ref_number">Numer ref.:</string>
 	<string name="dry">Suchy hydrant</string>
 	<string name="other">Inny</string>
@@ -39,4 +42,10 @@
 	<string name="warning">Uwaga</string>
 	<string name="error">Błąd</string>
 	<string name="pick_place">Wybierz miejsce</string>
+	<string name="road_a">A</string>
+	<string name="road_s">S</string>
+	<string name="road_dk">DK</string>
+	<string name="road_dw">DW</string>
+	<string name="road_other">INNE</string>
+	<string name="chainage">Słupek kilometrowy</string>
 </resources>

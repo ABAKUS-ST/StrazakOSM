@@ -1,86 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="455dp"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/view_chainage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp" >
 
-        <TextView
-            android:id="@+id/ref_label"
+        <ImageView
+            android:id="@+id/image_view_chainage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/add_button"
-            android:layout_marginTop="37dp"
-            android:text="@string/road_number"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/chainage"
+            android:scaleType="fitXY"
+            android:src="@drawable/chainage_bg_land" />
 
         <EditText
             android:id="@+id/ref_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/add_button"
-            android:layout_alignTop="@+id/ref_label"
-            android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/ref_label"
+            android:layout_width="72dp"
+            android:layout_height="52dp"
+            android:layout_alignLeft="@+id/image_view_chainage"
+            android:layout_alignTop="@+id/image_view_chainage"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="11dp"
+            android:background="@drawable/text_bg_red"
             android:ems="10"
-            android:inputType="text" >
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textSize="@dimen/big" >
 
             <requestFocus />
         </EditText>
 
-        <Button
-            android:id="@+id/minus_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/ref_label"
-            android:minHeight="100dp"
-            android:minWidth="120dip"
-            android:text="@string/minus"
-            android:textSize="@dimen/Big" />
-
-        <Button
-            android:id="@+id/add_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/distance_edit"
-            android:layout_below="@+id/distance_edit"
-            android:layout_marginTop="32dp"
-            android:layout_toRightOf="@+id/ref_label"
-            android:minHeight="100dp"
-            android:text="@string/add_button" />
-
         <EditText
             android:id="@+id/distance_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/minus_button"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/minus_button"
+            android:layout_width="72dp"
+            android:layout_height="52dp"
+            android:layout_alignLeft="@+id/image_view_chainage"
+            android:layout_alignTop="@+id/image_view_chainage"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="148dp"
+            android:background="@drawable/text_bg"
             android:ems="10"
-            android:inputType="number" />
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textSize="@dimen/big" />
 
-        <Button
-            android:id="@+id/plus_button"
+        <TableLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/distance_edit"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/minus_button"
-            android:minHeight="100dp"
-            android:minWidth="120dip"
-            android:text="@string/plus"
-            android:textSize="@dimen/Big" />
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/image_view_chainage" >
 
-        <TextView
-            android:id="@+id/pk_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/distance_edit"
-            android:layout_alignParentLeft="true"
-            android:text="@string/distance"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-    </RelativeLayout>
+            <TableRow
+                android:id="@+id/table_row_road"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="1"
+                android:visibility="gone" >
+
+                <Button
+                    android:id="@+id/road_a_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/road_a" />
+
+                <Button
+                    android:id="@+id/road_s_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/road_s" />
+
+                <Button
+                    android:id="@+id/road_dk_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/road_dk" />
+
+                <Button
+                    android:id="@+id/road_dw_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/road_dw" />
+
+                <Button
+                    android:id="@+id/road_other_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2"
+                    android:text="@string/road_other" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="40dp"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/last_road_1_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/big" />
+
+                <Button
+                    android:id="@+id/last_road_2_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/big" />
+
+                <Button
+                    android:id="@+id/last_road_3_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/big" />
+
+                <Button
+                    android:id="@+id/last_road_4_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/big" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <Button
+                        android:id="@+id/plus_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/plus"
+                        android:textSize="@dimen/big" />
+
+                    <Button
+                        android:id="@+id/minus_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/minus"
+                        android:textSize="@dimen/big" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/add_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:text="@string/add_button"
+                    android:textSize="@dimen/big" />
+
+            </TableRow>
+        </TableLayout>
+
+</RelativeLayout>
