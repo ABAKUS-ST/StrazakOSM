@@ -345,11 +345,11 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 
 		if (isPortrait || isTablet) {
 			refEditLayout.setMargins(isPortrait && isTablet ? 15 : 2,
-					(int) (imageView.getMeasuredHeight() / 17)
-							+ (isPortrait && isTablet ? 15 : 0), 0, 0);
+					(int) (imageView.getMeasuredHeight() / 18)
+							+ (isPortrait && isTablet ? 20 : 0), 0, 0);
 		} else {
 			refEditLayout.setMargins(2,
-					(int) (imageView.getMeasuredHeight() / 17.5), 0, 0);
+					(int) (imageView.getMeasuredHeight() / 17), 0, 0);
 		}
 
 		refEdit.setLayoutParams(refEditLayout);
@@ -358,11 +358,11 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 				distanceEdit.getLayoutParams());
 		if (isPortrait || isTablet) {
 			distanceEditLayout.setMargins(isPortrait && isTablet ? 15 : 2,
-					(int) (imageView.getMeasuredHeight() / 2.12)
+					(int) (imageView.getMeasuredHeight() / 2.15)
 							+ (isPortrait && isTablet ? 15 : 0), 0, 0);
 		} else {
 			distanceEditLayout.setMargins(2,
-					(int) (imageView.getMeasuredHeight() / 1.615), 0, 0);
+					(int) (imageView.getMeasuredHeight() / 1.62), 0, 0);
 		}
 
 		distanceEdit.setLayoutParams(distanceEditLayout);
