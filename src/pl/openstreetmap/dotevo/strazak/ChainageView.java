@@ -16,17 +16,21 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TableRow;
 import android.widget.TextView.BufferType;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 public class ChainageView implements OnClickListener, OnFocusChangeListener,
@@ -102,6 +106,22 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 		refEdit.setOnFocusChangeListener(this);
 		refEdit.setOnClickListener(this);
 		refEdit.setInputType(InputType.TYPE_NULL);
+		refEdit.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				boolean handled = false;
+				if (actionId == EditorInfo.IME_ACTION_NEXT) {
+					distanceEdit.setSelection(0, distanceEdit.getText().length());
+					distanceEdit.requestFocus();
+					handled = true;
+				}
+
+				return handled;
+			}
+		});
+
 		distanceEdit.addTextChangedListener(this);
 		distanceEdit.setOnFocusChangeListener(this);
 		addButton.setOnClickListener(this);
@@ -298,7 +318,12 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 				lastRoadButton.setClickable(true);
 				lastRoadButton.setBackgroundDrawable(addButton.getBackground()
 						.getConstantState().newDrawable());
-				mainActivity.changeViewColor(lastRoadButton, Color.RED);
+				if (lastRoadList.get(i).startsWith("S")
+						|| lastRoadList.get(i).startsWith("A")) {
+					mainActivity.changeViewColor(lastRoadButton, Color.BLUE);
+				} else {
+					mainActivity.changeViewColor(lastRoadButton, Color.RED);
+				}
 			} else {
 				lastRoadButton.setText("");
 				lastRoadButton.setClickable(false);
@@ -410,7 +435,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 		tags.put("highway", "milestone");
 		tags.put("distance", distanceEdit.getText().toString());
 		tags.put("ref", refEdit.getText().toString());
-		tags.put("source", "GSM (APK:StrazakOSM)");
+		tags.put("source", "GPS(APK:StrazakOSM)");
 
 		try {
 			if (((StApplication) mainActivity.getApplication()).osmWriter == null) {

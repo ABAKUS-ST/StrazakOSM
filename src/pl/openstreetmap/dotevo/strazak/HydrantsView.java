@@ -68,6 +68,10 @@ public class HydrantsView implements OnClickListener {
 			mainActivity.changeViewColor(lastButtonId, null);
 			lastButtonId = view.getId();
 			mainActivity.changeViewColor(lastButtonId, Color.GREEN);
+
+			hydrantType = -1;
+			hydrantSize = -1;
+			hydrantPlace = -1;
 		}
 
 		switch (view.getId()) {
@@ -181,7 +185,7 @@ public class HydrantsView implements OnClickListener {
 		if (hydrantPlace == 3)
 			tags.put("fire_hydrant:position", "sidewalk");
 
-		tags.put("source", "GSM (APK:StrazakOSM)");
+		tags.put("source", "GPS(APK:StrazakOSM)");
 
 		if (hydrantRef.getText().length() > 0) {
 			tags.put("ref", hydrantRef.getText().toString());
