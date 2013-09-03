@@ -310,7 +310,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 	}
 
 	public void setEnableButtons() {
-		addButton.setEnabled(mainActivity.getLocation() != null
+		addButton.setEnabled(MainActivity.getLocation() != null
 				&& distanceEdit.getText().length() > 0
 				&& refEdit.getText().length() > 0);
 	}
@@ -469,7 +469,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 	}
 
 	private void addChainage() {
-		if (mainActivity.getLocation() == null) {
+		if (MainActivity.getLocation() == null) {
 			Toast.makeText(mainActivity, R.string.waitForFixGPS,
 					Toast.LENGTH_LONG).show();
 			return;
@@ -487,7 +487,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 			}
 
 			((StApplication) mainActivity.getApplication()).osmWriter.addNode(
-					mainActivity.getLocation().getLatitude(), mainActivity
+					MainActivity.getLocation().getLatitude(), MainActivity
 							.getLocation().getLongitude(), tags);
 		} catch (Exception e) {
 			mainActivity.showDialogFatalError(R.string.errorFileOpen);

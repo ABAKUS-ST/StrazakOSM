@@ -6,6 +6,9 @@
     <string name="add_with_location_button">Dodaj z podaniem położenia</string>
     <string name="errorGpsDisabled">Wyłączony GPS</string>
     <string name="queryGpsDisabled">GPS jest wymagany do działania aplikacji</string>
+    <string name="errorNoInternet">Wyłączony internet</string>
+    <string name="queryNoInternet">Brak połączenia z internetem - praca w trybie offline</string>
+    <string name="queryNoUpload">Obecnie nie można wysłać danych</string>
     <string name="systemSettings">Ustawienia systemu</string>
     <string name="quit">Wyjście</string>
     <string name="cancel">Anuluj</string>
@@ -48,4 +51,7 @@
 	<string name="road_dw">DW</string>
 	<string name="road_other">INNE</string>
 	<string name="chainage">Słupek kilometrowy</string>
+	<string name="layers">Warstwy</string>
+	<string name="icon">Ikona</string>
+	<string name="showmap">Mapa OSM</string>
 </resources>

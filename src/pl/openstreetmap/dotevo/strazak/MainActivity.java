@@ -19,6 +19,7 @@ import android.location.GpsStatus.Listener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -53,6 +54,10 @@ public class MainActivity extends Activity implements LocationListener,
 	public static final String SETTINGS_FILE = "strazak_osm_settings";
 	public static final String SELECTED_VIEW_SETTING = "selected_view";
 	public static final String LAST_ROADS_SETTING = "last_roads";
+	public static final String MAP_SHOW_COMPASS_SETTING = "map_show_compass";
+	public static final String MAP_SHOW_SCALE_SETTING = "map_show_scale";
+	public static final String MAP_SHOW_HYDRANTS_SETTING = "map_show_hydrants";
+	public static final String MAP_SHOW_FORESTS_SETTING = "map_show_forests";
 
 	private ViewSwitcher switcher;
 	private GestureDetector gestureDetector;
@@ -61,10 +66,10 @@ public class MainActivity extends Activity implements LocationListener,
 
 	private HydrantsView hydrantsView;
 	private ChainageView chainageView;
-	private Location location;
+	private static Location location;
 	private boolean isGpsWarningShown;
 
-	public Location getLocation() {
+	public static Location getLocation() {
 		return location;
 	}
 
@@ -191,6 +196,11 @@ public class MainActivity extends Activity implements LocationListener,
 		case R.id.info:
 			showDialogInfo();
 			return true;
+		case R.id.showmap:
+			Intent intent = new Intent(MainActivity.this, OsmMapActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -253,7 +263,7 @@ public class MainActivity extends Activity implements LocationListener,
 
 	@Override
 	public void onLocationChanged(Location location) {
-		this.location = location;
+		MainActivity.location = location;
 
 		hydrantsView.setEnableButtons();
 		chainageView.setEnableButtons();
@@ -413,6 +423,16 @@ public class MainActivity extends Activity implements LocationListener,
 		builder.show();
 	}
 
+	private void showDialogNoInternet() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.errorNoInternet)
+				.setMessage(R.string.queryNoUpload).setCancelable(false)
+				.setIcon(R.drawable.transmit_error)
+				.setNegativeButton(R.string.cancel, null);
+
+		builder.show();
+	}
+
 	private void showDialogGpsDisabled() {
 		if (!isGpsWarningShown) {
 			isGpsWarningShown = true;
@@ -444,17 +464,25 @@ public class MainActivity extends Activity implements LocationListener,
 	}
 
 	private void showDialogUploadWarning() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.warning)
-				.setMessage(R.string.send_warning)
-				.setPositiveButton(R.string.next,
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								showDialogUpload();
-							}
-						});
+		// Check for internet
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		if (cm.getActiveNetworkInfo() == null
+				|| !cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
+			showDialogNoInternet();
+		} else {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle(R.string.warning)
+					.setMessage(R.string.send_warning)
+					.setPositiveButton(R.string.next,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									showDialogUpload();
+								}
+							});
 
-		builder.show();
+			builder.show();
+		}
 	}
 
 	private void showDialogUpload() {

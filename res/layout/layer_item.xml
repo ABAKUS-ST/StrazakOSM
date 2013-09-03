@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/layer_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/icon" />
+
+        <CheckedTextView
+            android:id="@+id/layer_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checkMark="?android:attr/listChoiceIndicatorSingle"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="5dp"
+            android:textColor="#555555" />
+
+</LinearLayout>

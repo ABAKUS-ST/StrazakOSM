@@ -131,7 +131,7 @@ public class HydrantsView implements OnClickListener {
 	}
 
 	public void setEnableButtons() {
-		if (hydrantType == -1 || mainActivity.getLocation() == null) {
+		if (hydrantType == -1 || MainActivity.getLocation() == null) {
 			hydrantAdd.setEnabled(false);
 			hydrantAddWp.setEnabled(false);
 		} else if (hydrantType == PILLAR || hydrantType == UNDERGROUND) {
@@ -146,7 +146,7 @@ public class HydrantsView implements OnClickListener {
 	private void addHydrant() {
 		mainActivity.changeViewColor(lastButtonId, null);
 
-		if (mainActivity.getLocation() == null) {
+		if (MainActivity.getLocation() == null) {
 			Toast.makeText(mainActivity, R.string.waitForFixGPS,
 					Toast.LENGTH_LONG).show();
 			return;
@@ -196,7 +196,7 @@ public class HydrantsView implements OnClickListener {
 			}
 
 			((StApplication) mainActivity.getApplication()).osmWriter.addNode(
-					mainActivity.getLocation().getLatitude(), mainActivity
+					MainActivity.getLocation().getLatitude(), MainActivity
 							.getLocation().getLongitude(), tags);
 		} catch (Exception e) {
 			mainActivity.showDialogFatalError(R.string.errorFileOpen);
