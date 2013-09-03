@@ -5,7 +5,6 @@ import java.util.HashMap;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,8 +46,8 @@ public class HydrantsView implements OnClickListener {
 		mainActivity.findViewById(R.id.pillar_100).setOnClickListener(this);
 		mainActivity.findViewById(R.id.pillar_80).setOnClickListener(this);
 		mainActivity.findViewById(R.id.pillar_x).setOnClickListener(this);
-		mainActivity.findViewById(R.id.wall_100).setOnClickListener(this);
-		mainActivity.findViewById(R.id.wall_80).setOnClickListener(this);
+		mainActivity.findViewById(R.id.wall_52).setOnClickListener(this);
+		mainActivity.findViewById(R.id.wall_25).setOnClickListener(this);
 		mainActivity.findViewById(R.id.wall_x).setOnClickListener(this);
 		mainActivity.findViewById(R.id.underground_100)
 				.setOnClickListener(this);
@@ -99,12 +98,12 @@ public class HydrantsView implements OnClickListener {
 			showDialogNumber();
 			hydrantType = UNDERGROUND;
 			break;
-		case R.id.wall_80:
-			hydrantSize = 80;
+		case R.id.wall_25:
+			hydrantSize = 25;
 			hydrantType = WALL;
 			break;
-		case R.id.wall_100:
-			hydrantSize = 100;
+		case R.id.wall_52:
+			hydrantSize = 52;
 			hydrantType = WALL;
 			break;
 		case R.id.wall_x:
@@ -248,7 +247,7 @@ public class HydrantsView implements OnClickListener {
 		final EditText userInput = (EditText) promptsView
 				.findViewById(R.id.editTextDialogUserInput);
 
-		new Handler().postDelayed(new Runnable() {
+		mainActivity.getHandler().postDelayed(new Runnable() {
 
 			public void run() {
 				MotionEvent downEvent = MotionEvent.obtain(

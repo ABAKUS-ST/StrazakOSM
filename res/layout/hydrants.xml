@@ -9,6 +9,8 @@
             android:id="@+id/tableRow1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1" >
 
             <ImageButton
@@ -40,6 +42,8 @@
             android:id="@+id/tableRow2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1" >
 
             <ImageButton
@@ -71,23 +75,25 @@
             android:id="@+id/tableRow3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1" >
 
             <ImageButton
-                android:id="@+id/wall_80"
+                android:id="@+id/wall_25"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/hydrant"
-                android:src="@drawable/sciana_80" />
+                android:src="@drawable/sciana_25" />
 
             <ImageButton
-                android:id="@+id/wall_100"
+                android:id="@+id/wall_52"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:contentDescription="@string/hydrant"
-                android:src="@drawable/sciana_100" />
+                android:src="@drawable/sciana_52" />
 
             <ImageButton
                 android:id="@+id/wall_x"
@@ -102,6 +108,8 @@
             android:id="@+id/tableRow4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1" >
 
             <ImageButton

@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -54,6 +53,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 	private Button roadDWButton;
 
 	private int lastClick = 1;
+	private int lastColor = Color.RED;
 	private Integer lastButtonId = null;
 	private InputMethodManager keyboard;
 	private List<String> lastRoadList = new ArrayList<String>();
@@ -113,7 +113,8 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 					KeyEvent event) {
 				boolean handled = false;
 				if (actionId == EditorInfo.IME_ACTION_NEXT) {
-					distanceEdit.setSelection(0, distanceEdit.getText().length());
+					distanceEdit.setSelection(0, distanceEdit.getText()
+							.length());
 					distanceEdit.requestFocus();
 					handled = true;
 				}
@@ -164,6 +165,8 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 			mainActivity.changeViewColor(lastButtonId, Color.GREEN);
 		}
 
+		String road = null;
+
 		switch (view.getId()) {
 		case R.id.minus_button:
 			lastClick = -1;
@@ -197,22 +200,62 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 		case R.id.last_road_2_button:
 		case R.id.last_road_3_button:
 		case R.id.last_road_4_button:
-			String lastRoad = ((Button) view).getText().toString();
-			refEdit.setText(lastRoad, BufferType.EDITABLE);
-			refEdit.setSelection(lastRoad.length(), lastRoad.length());
+			road = ((Button) view).getText().toString();
+			lastColor = (Integer) ((Button) view).getTag();
+			switch (lastColor) {
+			case Color.BLUE:
+				refEdit.setBackgroundResource(R.drawable.text_bg_blue);
+				break;
+			case Color.YELLOW:
+				refEdit.setBackgroundResource(R.drawable.text_bg_yellow);
+				break;
+			case Color.GRAY:
+				refEdit.setBackgroundResource(R.drawable.text_bg_gray);
+				break;
+			default:
+				refEdit.setBackgroundResource(R.drawable.text_bg_red);
+				break;
+			}
+
+			refEdit.setText(road, BufferType.EDITABLE);
+			refEdit.setSelection(road.length(), road.length());
 			hideRoadTableRow();
 			break;
 		case R.id.road_a_button:
+			road = ((Button) view).getText().toString();
+			lastColor = Color.BLUE;
+			refEdit.setBackgroundResource(R.drawable.text_bg_blue);
+			refEdit.setText(road, BufferType.EDITABLE);
+			refEdit.setSelection(road.length(), road.length());
+			refEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+			keyboard.showSoftInput(refEdit, InputMethodManager.SHOW_FORCED);
+			break;
 		case R.id.road_s_button:
-			String road = ((Button) view).getText().toString();
+			road = ((Button) view).getText().toString();
+			lastColor = Color.RED;
+			refEdit.setBackgroundResource(R.drawable.text_bg_red);
 			refEdit.setText(road, BufferType.EDITABLE);
 			refEdit.setSelection(road.length(), road.length());
 			refEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
 			keyboard.showSoftInput(refEdit, InputMethodManager.SHOW_FORCED);
 			break;
 		case R.id.road_dk_button:
+			lastColor = Color.RED;
+			refEdit.setBackgroundResource(R.drawable.text_bg_red);
+			refEdit.setText("", BufferType.EDITABLE);
+			refEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+			keyboard.showSoftInput(refEdit, InputMethodManager.SHOW_FORCED);
+			break;
 		case R.id.road_dw_button:
+			lastColor = Color.YELLOW;
+			refEdit.setBackgroundResource(R.drawable.text_bg_yellow);
+			refEdit.setText("", BufferType.EDITABLE);
+			refEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+			keyboard.showSoftInput(refEdit, InputMethodManager.SHOW_FORCED);
+			break;
 		case R.id.road_other_button:
+			lastColor = Color.GRAY;
+			refEdit.setBackgroundResource(R.drawable.text_bg_gray);
 			refEdit.setText("", BufferType.EDITABLE);
 			refEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
 			keyboard.showSoftInput(refEdit, InputMethodManager.SHOW_FORCED);
@@ -226,7 +269,9 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 			break;
 		}
 
-		setEnableButtons();
+		if (view.getId() != R.id.add_button) {
+			setEnableButtons();
+		}
 	}
 
 	@Override
@@ -241,13 +286,6 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		setEnableButtons();
-
-		if (refEdit.getText().toString().startsWith("S")
-				|| refEdit.getText().toString().startsWith("A")) {
-			refEdit.setBackgroundResource(R.drawable.text_bg_blue);
-		} else {
-			refEdit.setBackgroundResource(R.drawable.text_bg_red);
-		}
 	}
 
 	@Override
@@ -314,15 +352,20 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 			}
 
 			if (lastRoadList.size() > i) {
-				lastRoadButton.setText(lastRoadList.get(i));
+				String[] lastRoad = lastRoadList.get(i).split(":");
+
+				lastRoadButton.setText(lastRoad[0]);
 				lastRoadButton.setClickable(true);
 				lastRoadButton.setBackgroundDrawable(addButton.getBackground()
 						.getConstantState().newDrawable());
-				if (lastRoadList.get(i).startsWith("S")
-						|| lastRoadList.get(i).startsWith("A")) {
-					mainActivity.changeViewColor(lastRoadButton, Color.BLUE);
+
+				if (lastRoad.length > 1) {
+					int color = Integer.parseInt(lastRoad[1]);
+					mainActivity.changeViewColor(lastRoadButton, color);
+					lastRoadButton.setTag(color);
 				} else {
 					mainActivity.changeViewColor(lastRoadButton, Color.RED);
+					lastRoadButton.setTag(Color.RED);
 				}
 			} else {
 				lastRoadButton.setText("");
@@ -335,6 +378,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 	private void saveLastRoads() {
 		String lastRoad = refEdit.getText().toString();
 		if (lastRoad != null && !"".equals(lastRoad)) {
+			lastRoad += ":" + lastColor;
 			int lastRoadIndex = lastRoadList.indexOf(lastRoad);
 			if (lastRoadIndex >= 0) {
 				lastRoadList.remove(lastRoadIndex);
@@ -347,7 +391,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 				}
 
 				if (lastRoadList.size() > 4) {
-					lastRoadList.remove(3);
+					lastRoadList.remove(4);
 				}
 			}
 
@@ -463,7 +507,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 		loadLastRoads();
 		hideRoadTableRow();
 
-		new Handler().postDelayed(unlockButton, 1000);
+		mainActivity.getHandler().postDelayed(unlockButton, 3000);
 	}
 
 	private Runnable unlockButton = new Runnable() {

@@ -23,6 +23,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -32,6 +34,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +68,10 @@ public class MainActivity extends Activity implements LocationListener,
 		return location;
 	}
 
+	public Handler getHandler() {
+		return handler;
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,9 +85,6 @@ public class MainActivity extends Activity implements LocationListener,
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 			showDialogGpsDisabled();
 		}
-
-		location = locationManager
-				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 		// check for external storage
 		String extStorageState = Environment.getExternalStorageState();
@@ -489,7 +493,51 @@ public class MainActivity extends Activity implements LocationListener,
 							}
 						}).setNegativeButton(R.string.cancel, null);
 
-		builder.show();
+		AlertDialog dialog = builder.create();
+
+		dialog.show();
+
+		final Button positiveButton = dialog
+				.getButton(DialogInterface.BUTTON_POSITIVE);
+		positiveButton.setEnabled(false);
+
+		userInput.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				String text = userInput.getText().toString();
+				if ("".equals(text)) {
+					positiveButton.setEnabled(false);
+				} else {
+					boolean hasDigitsOnly = true;
+					boolean hasLetter = false;
+					boolean hasDot = false;
+					boolean hasAt = false;
+
+					for (int i = 0; i < text.length(); i++) {
+						hasDigitsOnly &= Character.isDigit(text.charAt(i));
+						hasLetter |= Character.isLetter(text.charAt(i));
+						hasDot |= Character.valueOf('.').equals(text.charAt(i))
+								&& i > 0 && i < text.length() - 1;
+						hasAt |= Character.valueOf('@').equals(text.charAt(i))
+								&& i > 0 && i < text.length() - 1;
+					}
+
+					positiveButton.setEnabled((hasDigitsOnly && text.length() >= 9)
+							|| (hasLetter && hasDot && hasAt));
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
 	}
 
 	private void showDialogInfo() {
