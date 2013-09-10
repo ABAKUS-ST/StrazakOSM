@@ -35,8 +35,11 @@ import android.widget.LinearLayout;
 
 public class OsmMapActivity extends Activity {
 
+	private static final int REQUEST_LAYERS_SHOW = 3;
+
 	private Button buttonFollow;
 	private MapView mapView;
+	private boolean canCloseFile = true;
 
 	private SharedPreferences prefs;
 	private MyLocationOverlay locationOverlay;
@@ -166,6 +169,15 @@ public class OsmMapActivity extends Activity {
 	}
 
 	@Override
+	protected void onStop() {
+		if (canCloseFile) {
+			((StApplication) getApplication()).closeFile();
+		}
+
+		super.onStop();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 
@@ -208,6 +220,15 @@ public class OsmMapActivity extends Activity {
 	}
 
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_LAYERS_SHOW) {
+			canCloseFile = true;
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		menu.clear();
 
@@ -218,11 +239,20 @@ public class OsmMapActivity extends Activity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		canCloseFile = false;
+		finish();
+	}
+
+	@Override
 	public boolean onMenuItemSelected(final int featureId, final MenuItem item) {
 		switch (item.getItemId()) {
 		case 1:
+			canCloseFile = false;
+
 			Intent intentLayers = new Intent(this, OsmMapLayerActivity.class);
-			startActivity(intentLayers);
+			startActivityForResult(intentLayers, REQUEST_LAYERS_SHOW);
+
 			break;
 		}
 

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
@@ -45,6 +46,7 @@ public class MainActivity extends Activity implements LocationListener,
 		Listener, HttpFileUploadResponse, OnGestureListener {
 
 	private static final int REQUEST_GPS_ENABLE = 1;
+	private static final int REQUEST_MAP_SHOW = 2;
 	private static final int SWIPE_MIN_VELOCITY = 100;
 	private static final int SWIPE_MIN_DISTANCE = 100;
 	private static final long LOCATION_UPDATE_MIN_TIME_MS = 0;
@@ -68,6 +70,7 @@ public class MainActivity extends Activity implements LocationListener,
 	private ChainageView chainageView;
 	private static Location location;
 	private boolean isGpsWarningShown;
+	private boolean isChildActivityRunning;
 
 	public static Location getLocation() {
 		return location;
@@ -104,7 +107,7 @@ public class MainActivity extends Activity implements LocationListener,
 			showDialogFatalError(R.string.errorStorageUnavailable);
 		}
 
-		switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher1);
+		initializeControls();
 
 		gestureDetector = new GestureDetector(this, this);
 
@@ -151,23 +154,62 @@ public class MainActivity extends Activity implements LocationListener,
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onStop() {
+		if (!isChildActivityRunning) {
+			((StApplication) getApplication()).closeFile();
+		}
 
-		((StApplication) getApplication()).closeFile();
+		super.onStop();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		int selectedView = switcher.getDisplayedChild();
+		final String hydrantRef = hydrantsView.getHydrantRef();
+		final String chainageRef = chainageView.getRef();
+		final String chainageDistance = chainageView.getDistance();
+
+		setContentView(R.layout.activity_main);
+
+		initializeControls();
+
+		if (selectedView != switcher.getDisplayedChild()) {
+			switcher.setDisplayedChild(selectedView);
+		}
+
+		handler.post(new Runnable() {
+
+			@Override
+			public void run() {
+				hydrantsView.initializeControls();
+				hydrantsView.setHydrantRef(hydrantRef);
+
+				chainageView.initializeControls();
+				chainageView.setRef(chainageRef);
+				chainageView.setDistance(chainageDistance);
+				chainageView.checkRoadTableRowVisibility();
+			}
+		});
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case REQUEST_GPS_ENABLE:
+			isChildActivityRunning = false;
 			isGpsWarningShown = false;
+
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 			if (!locationManager
 					.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
 				showDialogGpsDisabled();
 			}
 
+			break;
+		case REQUEST_MAP_SHOW:
+			isChildActivityRunning = false;
 			break;
 		default:
 			super.onActivityResult(requestCode, resultCode, data);
@@ -197,9 +239,12 @@ public class MainActivity extends Activity implements LocationListener,
 			showDialogInfo();
 			return true;
 		case R.id.showmap:
+			isChildActivityRunning = true;
+
 			Intent intent = new Intent(MainActivity.this, OsmMapActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			startActivityForResult(intent, REQUEST_MAP_SHOW);
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -210,13 +255,13 @@ public class MainActivity extends Activity implements LocationListener,
 	public void onGpsStatusChanged(int event) {
 		switch (event) {
 		case GpsStatus.GPS_EVENT_STARTED:
-			this.setTitle(R.string.statusStartedGPS);
+			setTitle(R.string.statusStartedGPS);
 			break;
 		case GpsStatus.GPS_EVENT_STOPPED:
-			this.setTitle(R.string.statusStoppedGPS);
+			setTitle(R.string.statusStoppedGPS);
 			break;
 		case GpsStatus.GPS_EVENT_FIRST_FIX:
-			this.setTitle(R.string.statusFixGPS);
+			setTitle(R.string.statusFixGPS);
 			break;
 		case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
 			GpsStatus gpsStatus = locationManager.getGpsStatus(null);
@@ -239,7 +284,7 @@ public class MainActivity extends Activity implements LocationListener,
 				gpsText = "znakomity (7+)";
 			}
 
-			this.setTitle(getString(R.string.app_name) + ". GPS: " + gpsText);
+			setTitle(getString(R.string.app_name) + ". GPS: " + gpsText);
 			break;
 		}
 	}
@@ -378,6 +423,10 @@ public class MainActivity extends Activity implements LocationListener,
 		}
 	}
 
+	private void initializeControls() {
+		switcher = (ViewSwitcher) findViewById(R.id.viewSwitcher1);
+	}
+
 	private void sendData(String name) {
 		((StApplication) getApplication()).newOSMFile();
 		File kpmFolder = new File(((StApplication) getApplication()).extStorage
@@ -452,6 +501,8 @@ public class MainActivity extends Activity implements LocationListener,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int which) {
+									isChildActivityRunning = true;
+
 									startActivityForResult(
 											new Intent(
 													android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),

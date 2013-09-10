@@ -36,28 +36,15 @@ public class HydrantsView implements OnClickListener {
 	public HydrantsView(MainActivity mainActivity) {
 		this.mainActivity = mainActivity;
 
-		hydrantAdd = (Button) mainActivity.findViewById(R.id.hydrant_add);
-		hydrantAddWp = (Button) mainActivity.findViewById(R.id.hydrant_add_wp);
-		hydrantRef = (EditText) mainActivity.findViewById(R.id.hydrant_ref);
+		initializeControls();
+	}
 
-		hydrantAdd.setOnClickListener(this);
-		hydrantAddWp.setOnClickListener(this);
+	public String getHydrantRef() {
+		return this.hydrantRef.getText().toString();
+	}
 
-		mainActivity.findViewById(R.id.pillar_100).setOnClickListener(this);
-		mainActivity.findViewById(R.id.pillar_80).setOnClickListener(this);
-		mainActivity.findViewById(R.id.pillar_x).setOnClickListener(this);
-		mainActivity.findViewById(R.id.wall_52).setOnClickListener(this);
-		mainActivity.findViewById(R.id.wall_25).setOnClickListener(this);
-		mainActivity.findViewById(R.id.wall_x).setOnClickListener(this);
-		mainActivity.findViewById(R.id.underground_100)
-				.setOnClickListener(this);
-		mainActivity.findViewById(R.id.underground_80).setOnClickListener(this);
-		mainActivity.findViewById(R.id.underground_x).setOnClickListener(this);
-		mainActivity.findViewById(R.id.other).setOnClickListener(this);
-		mainActivity.findViewById(R.id.pond).setOnClickListener(this);
-		mainActivity.findViewById(R.id.wpoint).setOnClickListener(this);
-
-		setEnableButtons();
+	public void setHydrantRef(String hydrantRef) {
+		this.hydrantRef.setText(hydrantRef);
 	}
 
 	@Override
@@ -130,6 +117,35 @@ public class HydrantsView implements OnClickListener {
 		setEnableButtons();
 	}
 
+	public void initializeControls() {
+		hydrantAdd = (Button) mainActivity.findViewById(R.id.hydrant_add);
+		hydrantAddWp = (Button) mainActivity.findViewById(R.id.hydrant_add_wp);
+		hydrantRef = (EditText) mainActivity.findViewById(R.id.hydrant_ref);
+
+		hydrantAdd.setOnClickListener(this);
+		hydrantAddWp.setOnClickListener(this);
+
+		mainActivity.findViewById(R.id.pillar_100).setOnClickListener(this);
+		mainActivity.findViewById(R.id.pillar_80).setOnClickListener(this);
+		mainActivity.findViewById(R.id.pillar_x).setOnClickListener(this);
+		mainActivity.findViewById(R.id.wall_52).setOnClickListener(this);
+		mainActivity.findViewById(R.id.wall_25).setOnClickListener(this);
+		mainActivity.findViewById(R.id.wall_x).setOnClickListener(this);
+		mainActivity.findViewById(R.id.underground_100)
+				.setOnClickListener(this);
+		mainActivity.findViewById(R.id.underground_80).setOnClickListener(this);
+		mainActivity.findViewById(R.id.underground_x).setOnClickListener(this);
+		mainActivity.findViewById(R.id.other).setOnClickListener(this);
+		mainActivity.findViewById(R.id.pond).setOnClickListener(this);
+		mainActivity.findViewById(R.id.wpoint).setOnClickListener(this);
+
+		setEnableButtons();
+
+		if (lastButtonId != null) {
+			mainActivity.changeViewColor(lastButtonId, Color.GREEN);
+		}
+	}
+
 	public void setEnableButtons() {
 		if (hydrantType == -1 || MainActivity.getLocation() == null) {
 			hydrantAdd.setEnabled(false);
@@ -145,6 +161,7 @@ public class HydrantsView implements OnClickListener {
 
 	private void addHydrant() {
 		mainActivity.changeViewColor(lastButtonId, null);
+		lastButtonId = null;
 
 		if (MainActivity.getLocation() == null) {
 			Toast.makeText(mainActivity, R.string.waitForFixGPS,

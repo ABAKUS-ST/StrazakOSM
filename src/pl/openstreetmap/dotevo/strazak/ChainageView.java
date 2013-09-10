@@ -64,96 +64,27 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 		keyboard = (InputMethodManager) mainActivity
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-		lastRoad1Button = (Button) mainActivity
-				.findViewById(R.id.last_road_1_button);
-		lastRoad2Button = (Button) mainActivity
-				.findViewById(R.id.last_road_2_button);
-		lastRoad3Button = (Button) mainActivity
-				.findViewById(R.id.last_road_3_button);
-		lastRoad4Button = (Button) mainActivity
-				.findViewById(R.id.last_road_4_button);
-
-		roadTableRow = (TableRow) mainActivity
-				.findViewById(R.id.table_row_road);
-		roadAButton = (Button) mainActivity.findViewById(R.id.road_a_button);
-		roadSButton = (Button) mainActivity.findViewById(R.id.road_s_button);
-		roadDKButton = (Button) mainActivity.findViewById(R.id.road_dk_button);
-		roadDWButton = (Button) mainActivity.findViewById(R.id.road_dw_button);
-
-		refEdit = (EditText) mainActivity.findViewById(R.id.ref_edit);
-		distanceEdit = (EditText) mainActivity.findViewById(R.id.distance_edit);
-		addButton = (Button) mainActivity.findViewById(R.id.add_button);
-		imageView = (ImageView) mainActivity
-				.findViewById(R.id.image_view_chainage);
-
-		lastRoad1Button.setOnClickListener(this);
-		lastRoad2Button.setOnClickListener(this);
-		lastRoad3Button.setOnClickListener(this);
-		lastRoad4Button.setOnClickListener(this);
-
-		roadAButton.setOnClickListener(this);
-		roadAButton.setTextColor(Color.WHITE);
-		mainActivity.changeViewColor(roadAButton, Color.BLUE);
-		roadSButton.setOnClickListener(this);
-		roadSButton.setTextColor(Color.WHITE);
-		mainActivity.changeViewColor(roadSButton, Color.RED);
-		roadDKButton.setOnClickListener(this);
-		mainActivity.changeViewColor(roadDKButton, Color.RED);
-		roadDWButton.setOnClickListener(this);
-		mainActivity.changeViewColor(roadDWButton, Color.YELLOW);
-
-		refEdit.addTextChangedListener(this);
-		refEdit.setOnFocusChangeListener(this);
-		refEdit.setOnClickListener(this);
-		refEdit.setInputType(InputType.TYPE_NULL);
-		refEdit.setOnEditorActionListener(new OnEditorActionListener() {
-
-			@Override
-			public boolean onEditorAction(TextView v, int actionId,
-					KeyEvent event) {
-				boolean handled = false;
-				if (actionId == EditorInfo.IME_ACTION_NEXT) {
-					distanceEdit.setSelection(0, distanceEdit.getText()
-							.length());
-					distanceEdit.requestFocus();
-					handled = true;
-				}
-
-				return handled;
-			}
-		});
-
-		distanceEdit.addTextChangedListener(this);
-		distanceEdit.setOnFocusChangeListener(this);
-		addButton.setOnClickListener(this);
-		imageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
-
-		distanceEdit.setText("0");
-
-		mainActivity.findViewById(R.id.plus_button).setOnClickListener(this);
-		mainActivity.findViewById(R.id.minus_button).setOnClickListener(this);
-		mainActivity.findViewById(R.id.road_other_button).setOnClickListener(
-				this);
-
-		mainActivity.changeViewColor(R.id.plus_button, Color.GREEN);
 		lastButtonId = R.id.plus_button;
 
-		setEnableButtons();
-		loadLastRoads();
+		initializeControls();
 
-		DisplayMetrics metrics = new DisplayMetrics();
-		mainActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		distanceEdit.setText("0");
+	}
 
-		if (isTablet(metrics)) {
-			if (getScreenOrientation(metrics) == Configuration.ORIENTATION_PORTRAIT) {
-				imageView.setMinimumWidth((int) (100 * metrics.density));
+	public String getRef() {
+		return this.refEdit.getText().toString();
+	}
 
-				refEdit.setTextSize(refEdit.getTextSize() * 1.5F);
-				distanceEdit.setTextSize(distanceEdit.getTextSize() * 1.5F);
-			} else {
-				imageView.setImageResource(R.drawable.chainage_bg);
-			}
-		}
+	public void setRef(String ref) {
+		this.refEdit.setText(ref);
+	}
+
+	public String getDistance() {
+		return this.distanceEdit.getText().toString();
+	}
+
+	public void setDistance(String distance) {
+		this.distanceEdit.setText(distance);
 	}
 
 	@Override
@@ -309,10 +240,124 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 		locateWidgets();
 	}
 
+	public void initializeControls() {
+		lastRoad1Button = (Button) mainActivity
+				.findViewById(R.id.last_road_1_button);
+		lastRoad2Button = (Button) mainActivity
+				.findViewById(R.id.last_road_2_button);
+		lastRoad3Button = (Button) mainActivity
+				.findViewById(R.id.last_road_3_button);
+		lastRoad4Button = (Button) mainActivity
+				.findViewById(R.id.last_road_4_button);
+
+		roadTableRow = (TableRow) mainActivity
+				.findViewById(R.id.table_row_road);
+		roadAButton = (Button) mainActivity.findViewById(R.id.road_a_button);
+		roadSButton = (Button) mainActivity.findViewById(R.id.road_s_button);
+		roadDKButton = (Button) mainActivity.findViewById(R.id.road_dk_button);
+		roadDWButton = (Button) mainActivity.findViewById(R.id.road_dw_button);
+
+		refEdit = (EditText) mainActivity.findViewById(R.id.ref_edit);
+		distanceEdit = (EditText) mainActivity.findViewById(R.id.distance_edit);
+		addButton = (Button) mainActivity.findViewById(R.id.add_button);
+		imageView = (ImageView) mainActivity
+				.findViewById(R.id.image_view_chainage);
+
+		lastRoad1Button.setOnClickListener(this);
+		lastRoad2Button.setOnClickListener(this);
+		lastRoad3Button.setOnClickListener(this);
+		lastRoad4Button.setOnClickListener(this);
+
+		roadAButton.setOnClickListener(this);
+		roadSButton.setOnClickListener(this);
+		roadDKButton.setOnClickListener(this);
+		roadDWButton.setOnClickListener(this);
+
+		roadAButton.setTextColor(Color.WHITE);
+		roadSButton.setTextColor(Color.WHITE);
+
+		mainActivity.changeViewColor(roadAButton, Color.BLUE);
+		mainActivity.changeViewColor(roadSButton, Color.RED);
+		mainActivity.changeViewColor(roadDKButton, Color.RED);
+		mainActivity.changeViewColor(roadDWButton, Color.YELLOW);
+
+		refEdit.addTextChangedListener(this);
+		refEdit.setOnFocusChangeListener(this);
+		refEdit.setOnClickListener(this);
+		refEdit.setInputType(InputType.TYPE_NULL);
+		refEdit.setOnEditorActionListener(new OnEditorActionListener() {
+
+			@Override
+			public boolean onEditorAction(TextView v, int actionId,
+					KeyEvent event) {
+				boolean handled = false;
+				if (actionId == EditorInfo.IME_ACTION_NEXT) {
+					distanceEdit.setSelection(0, distanceEdit.getText()
+							.length());
+					distanceEdit.requestFocus();
+					handled = true;
+				}
+
+				return handled;
+			}
+		});
+
+		distanceEdit.addTextChangedListener(this);
+		distanceEdit.setOnFocusChangeListener(this);
+		addButton.setOnClickListener(this);
+
+		mainActivity.findViewById(R.id.plus_button).setOnClickListener(this);
+		mainActivity.findViewById(R.id.minus_button).setOnClickListener(this);
+		mainActivity.findViewById(R.id.road_other_button).setOnClickListener(
+				this);
+
+		setEnableButtons();
+		loadLastRoads();
+
+		mainActivity.changeViewColor(lastButtonId, Color.GREEN);
+
+		DisplayMetrics metrics = new DisplayMetrics();
+		mainActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+		if (isTablet(metrics)) {
+			if (getScreenOrientation(metrics) == Configuration.ORIENTATION_PORTRAIT) {
+				imageView.setMinimumWidth((int) (100 * metrics.density));
+
+				refEdit.setTextSize(refEdit.getTextSize() * 1.5F);
+				distanceEdit.setTextSize(distanceEdit.getTextSize() * 1.5F);
+			} else {
+				imageView.setImageResource(R.drawable.chainage_bg);
+			}
+		}
+
+		imageView.getViewTreeObserver().addOnGlobalLayoutListener(this);
+	}
+
 	public void setEnableButtons() {
 		addButton.setEnabled(MainActivity.getLocation() != null
 				&& distanceEdit.getText().length() > 0
 				&& refEdit.getText().length() > 0);
+	}
+
+	public void checkRoadTableRowVisibility() {
+		if (!"".equals(refEdit.getText().toString())) {
+			switch (lastColor) {
+			case Color.BLUE:
+				refEdit.setBackgroundResource(R.drawable.text_bg_blue);
+				break;
+			case Color.YELLOW:
+				refEdit.setBackgroundResource(R.drawable.text_bg_yellow);
+				break;
+			case Color.GRAY:
+				refEdit.setBackgroundResource(R.drawable.text_bg_gray);
+				break;
+			default:
+				refEdit.setBackgroundResource(R.drawable.text_bg_red);
+				break;
+			}
+
+			hideRoadTableRow();
+		}
 	}
 
 	private void hideRoadTableRow() {

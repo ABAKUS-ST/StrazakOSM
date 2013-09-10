@@ -10,8 +10,7 @@
         android:id="@+id/table_row_road"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:visibility="gone" >
+        android:layout_marginBottom="15dp" >
 
         <Button
             android:id="@+id/road_a_button"
