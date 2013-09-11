@@ -233,7 +233,9 @@ public class MainActivity extends Activity implements LocationListener,
 			showDialogUploadWarning();
 			return true;
 		case R.id.changeview:
+			chainageView.setViewChanging(true);
 			nextView();
+			chainageView.setViewChanging(false);
 			return true;
 		case R.id.info:
 			showDialogInfo();
@@ -373,10 +375,14 @@ public class MainActivity extends Activity implements LocationListener,
 				&& (xdistance > SWIPE_MIN_DISTANCE)) {
 			if (ev1X > ev2X)// Switch Left
 			{
+				chainageView.setViewChanging(true);
 				previousView();
+				chainageView.setViewChanging(false);
 			} else {
 				// Switch Right
+				chainageView.setViewChanging(true);
 				nextView();
+				chainageView.setViewChanging(false);
 			}
 		}
 

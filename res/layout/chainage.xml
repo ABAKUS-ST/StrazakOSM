@@ -78,10 +78,7 @@
             android:gravity="center"
             android:inputType="number"
             android:maxLength="3"
-            android:textSize="@dimen/big" >
-
-            <requestFocus />
-        </EditText>
+            android:textSize="@dimen/big" />
 
         <EditText
             android:id="@+id/distance_edit"

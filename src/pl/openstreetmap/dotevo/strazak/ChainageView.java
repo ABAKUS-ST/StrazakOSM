@@ -54,6 +54,8 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 
 	private int lastClick = 1;
 	private int lastColor = Color.RED;
+	private boolean isUnlockPending;
+	private boolean isViewChanging;
 	private Integer lastButtonId = null;
 	private InputMethodManager keyboard;
 	private List<String> lastRoadList = new ArrayList<String>();
@@ -72,19 +74,23 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 	}
 
 	public String getRef() {
-		return this.refEdit.getText().toString();
+		return refEdit.getText().toString();
 	}
 
 	public void setRef(String ref) {
-		this.refEdit.setText(ref);
+		refEdit.setText(ref);
 	}
 
 	public String getDistance() {
-		return this.distanceEdit.getText().toString();
+		return distanceEdit.getText().toString();
 	}
 
 	public void setDistance(String distance) {
-		this.distanceEdit.setText(distance);
+		distanceEdit.setText(distance);
+	}
+
+	public void setViewChanging(boolean viewChanging) {
+		isViewChanging = viewChanging;
 	}
 
 	@Override
@@ -221,7 +227,7 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 
 	@Override
 	public void onFocusChange(View view, boolean hasFocus) {
-		if (hasFocus) {
+		if (hasFocus && !isViewChanging) {
 			if (view.getId() == R.id.ref_edit) {
 				if (roadTableRow.getVisibility() == View.GONE) {
 					roadTableRow.setVisibility(View.VISIBLE);
@@ -334,9 +340,11 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 	}
 
 	public void setEnableButtons() {
-		addButton.setEnabled(MainActivity.getLocation() != null
-				&& distanceEdit.getText().length() > 0
-				&& refEdit.getText().length() > 0);
+		if (!isUnlockPending) {
+			addButton.setEnabled(MainActivity.getLocation() != null
+					&& distanceEdit.getText().length() > 0
+					&& refEdit.getText().length() > 0);
+		}
 	}
 
 	public void checkRoadTableRowVisibility() {
@@ -552,12 +560,14 @@ public class ChainageView implements OnClickListener, OnFocusChangeListener,
 		loadLastRoads();
 		hideRoadTableRow();
 
+		isUnlockPending = true;
 		mainActivity.getHandler().postDelayed(unlockButton, 3000);
 	}
 
 	private Runnable unlockButton = new Runnable() {
 		@Override
 		public void run() {
+			isUnlockPending = false;
 			setEnableButtons();
 		}
 	};
